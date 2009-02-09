@@ -54,13 +54,7 @@ public class LoginDialog extends javax.swing.JDialog {
 		super(frame);
 		initGUI();
 		_toGateway = ToGateway;
-		try{
-			_toGateway.close();
-		} catch (Exception e)
-		{
-			//
-		}
-
+		
 	}
 
 	public Socket getSocket()
@@ -184,7 +178,7 @@ public class LoginDialog extends javax.swing.JDialog {
 
 		ObjectSender.SendObject(info, MessageTypes.LOGIN_INFO, getSocket());	
 
-		try{
+		try{			
 			ObjectInputStream response = new ObjectInputStream(getSocket().getInputStream());
 			myContainer objResponse = new myContainer();
 			objResponse =  (myContainer) response.readObject();
