@@ -1,4 +1,4 @@
-package Client;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
@@ -10,6 +10,7 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import common.Email;
 
 /**
 * This code was edited or generated using CloudGarden's Jigloo
@@ -83,6 +84,7 @@ public class MainWindow extends javax.swing.JDialog {
 					jTable1 = new JTable();
 					jPanel2.add(jTable1, BorderLayout.CENTER);
 					jTable1.setModel(jTable1Model);
+					jTable1.setPreferredSize(new java.awt.Dimension(418, 294));
 				}
 			}
 			{
