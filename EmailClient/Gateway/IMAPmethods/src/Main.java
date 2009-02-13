@@ -5,11 +5,16 @@
 
 //package telnettoimapserver;
 
+package IMAPmethods.src;
+
 import java.io.*;
 import java.net.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.lang.*;
+
+import common.Email;
+import common.Folders;
 
 public class Main {
 
@@ -276,7 +281,7 @@ public class Main {
         //Return Value
         Email ReVal = null;
 
-        String emailNum = theEmail.EmailNumber;
+        String emailNum = theEmail.getEmailNumber();
         String line = null;
         String emailBody = "";
         int lineCounter = 0;  // we use this variable to get rid of the first line of email
