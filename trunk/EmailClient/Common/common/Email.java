@@ -1,3 +1,4 @@
+package common;
 
 public class Email {
 
@@ -214,6 +215,30 @@ public class Email {
 	public boolean gethasnoatt(){
 		
 		return hasnoatt;
+	}
+
+	public boolean isHasatt() {
+		return hasatt;
+	}
+
+	public void setHasatt(boolean hasatt) {
+		this.hasatt = hasatt;
+	}
+
+	public boolean isHasnoatt() {
+		return hasnoatt;
+	}
+
+	public void setHasnoatt(boolean hasnoatt) {
+		this.hasnoatt = hasnoatt;
+	}
+
+	public boolean isDeleted() {
+		return Deleted;
+	}
+
+	public boolean isRead() {
+		return Read;
 	}
 	
 	// End of Get functions 
