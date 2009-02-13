@@ -8,6 +8,14 @@ import java.net.Socket;
 
 public class ObjectSender {
 
+	
+	/**
+	 * Wraps and object and sends it over the indicated socket. 
+	 * @param payload The object to be sent.
+	 * @param type The type of the object; @see MessageTypes
+	 * @param Socket The socket to use when sending data
+	 *   
+	 */ 
 	public static void SendObject(Serializable payload, MessageTypes type, Socket socket){
 		myContainer container = new myContainer();
 		container.setPayload(payload);
@@ -21,6 +29,8 @@ public class ObjectSender {
 			e.printStackTrace();
 		}						
 	}
+	
+	
 	
 	public static myContainer WaitForObject(Socket socket){
 		myContainer objResponse = null;
