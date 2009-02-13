@@ -17,7 +17,7 @@ import common.Email;
 import common.Folder;
 
 public class Main {
-
+ 
     static Socket IMAPSocket = null;
     static PrintWriter out = null;
     static BufferedReader in = null;
