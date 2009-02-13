@@ -1,6 +1,9 @@
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.io.IOException;
+import java.net.Socket;
+
 import javax.swing.JButton;
 
 import javax.swing.JFrame;
@@ -10,7 +13,13 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import common.Email;
+import common.Folder;
+import common.MessageTypes;
+import common.ObjectSender;
+import common.myContainer;
 
 /**
 * This code was edited or generated using CloudGarden's Jigloo
@@ -31,27 +40,76 @@ public class MainWindow extends javax.swing.JDialog {
 	private JButton DeleteFolderButton;
 	private JButton RenameFolderButton;
 	private JButton ComposeButton;
-	private JTable jTable1;
+	private JTable EmailTable;
 	private JTree FolderTree;
 	private JPanel jPanel3;
 	private JPanel jPanel2;
+	
+	private Socket toGateway = null;
+	private Folder [] folders = null;
+	private Email [] emails = null; 
 
 	/**
 	* Auto-generated main method to display this JDialog
 	*/
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				JFrame frame = new JFrame();
-				MainWindow inst = new MainWindow(frame);
-				inst.setVisible(true);
-			}
-		});
+	
+
+	
+	public MainWindow(JFrame frame, Socket socket) {
+		toGateway = socket;
+		
+		
+		initGUI();
+		
+		refreshData();		
 	}
 	
-	public MainWindow(JFrame frame) {
-		super(frame);
-		initGUI();
+	private void refreshData(){
+//		rebuild the gui based on received data
+		getDataFromGateway();		
+		DefaultMutableTreeNode top = new DefaultMutableTreeNode("Inbox");
+		GenerateTree(folders, top);
+		//FolderTree = new JTree();
+		String [] columns = {"Number", "Subject", "From", "Date"};
+		EmailTable = new JTable(parseEmailList(emails, "Inbox"), columns );		
+	}
+	private DefaultMutableTreeNode GenerateTree(Folder [] folders, DefaultMutableTreeNode node){
+		for (int i = 0; i < folders.length; i++){
+			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(folders[i]);
+			node.add(newNode);
+			//Recursively call to add all children
+		}
+		return node;
+	}
+	
+	private String [][] parseEmailList(Email [] emailList, String folder){
+		String [][] emails = new String[4][emailList.length];
+		for (int i= 0; i < emailList.length; i++){
+			emails[0][i] = emailList[i].getEmailNumber().toString();
+			emails[1][i] = emailList[i].getSubject();
+			
+			//TODO: Use the stuff Saleh added here
+			/*if (folder.getFldName() == "Sent"){
+				emails[1][i] = emailList.getTo();
+			}*/
+			emails[1][i] = emailList[i].getFrom().toString();
+			emails[1][i] = emailList[i].getDate().toString();				
+		}
+		return emails;
+	}
+	
+	private void getDataFromGateway(){
+		//send the request for the list of folders
+		myContainer container = ObjectSender.WaitForObject(getToGateway());
+		
+		if (container.getMsgType() == MessageTypes.FOLDER_LIST ){
+			folders = (Folder []) container.getPayload();
+			
+		}
+		else if (container.getMsgType() == MessageTypes.MESSAGE_LIST){
+			emails = (Email []) container.getPayload();
+		}
+		//else throw new IOException();			
 	}
 	
 	private void initGUI() {
@@ -68,6 +126,7 @@ public class MainWindow extends javax.swing.JDialog {
 				{
 					FolderTree = new JTree();
 					jPanel1.add(FolderTree, BorderLayout.CENTER);
+					FolderTree.setPreferredSize(new java.awt.Dimension(186, 316));
 				}
 			}
 			{
@@ -81,10 +140,10 @@ public class MainWindow extends javax.swing.JDialog {
 						new DefaultTableModel(
 								new String[][] { { "One", "Two" }, { "Three", "Four" } },
 								new String[] { "Column 1", "Column 2" });
-					jTable1 = new JTable();
-					jPanel2.add(jTable1, BorderLayout.CENTER);
-					jTable1.setModel(jTable1Model);
-					jTable1.setPreferredSize(new java.awt.Dimension(418, 294));
+					EmailTable = new JTable();
+					jPanel2.add(EmailTable, BorderLayout.CENTER);
+					EmailTable.setModel(jTable1Model);
+					EmailTable.setPreferredSize(new java.awt.Dimension(418, 294));
 				}
 			}
 			{
@@ -124,6 +183,14 @@ public class MainWindow extends javax.swing.JDialog {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Socket getToGateway() {
+		return toGateway;
+	}
+
+	public void setToGateway(Socket gateway) {
+		toGateway = gateway;
 	}
 
 }

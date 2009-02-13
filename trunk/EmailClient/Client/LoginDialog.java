@@ -179,20 +179,23 @@ public class LoginDialog extends javax.swing.JDialog {
 		ObjectSender.SendObject(info, MessageTypes.LOGIN_INFO, getSocket());	
 
 		try{			
-			ObjectInputStream response = new ObjectInputStream(getSocket().getInputStream());
-			myContainer objResponse = new myContainer();
-			objResponse =  (myContainer) response.readObject();
+			//ObjectInputStream response = new ObjectInputStream(getSocket().getInputStream());
+			//myContainer objResponse = new myContainer();
+			//objResponse =  (myContainer) response.readObject();
 
 			while (true){
-				if (objResponse.getMsgType() == MessageTypes.LOGIN_RESPONSE){
+				if (true){
+				//if (objResponse.getMsgType() == MessageTypes.LOGIN_RESPONSE){
 
-					myLoginResponse ActualResponse = new myLoginResponse();
-					ActualResponse = (myLoginResponse) objResponse.getPayload();
+					//myLoginResponse ActualResponse = new myLoginResponse();
+					//ActualResponse = (myLoginResponse) objResponse.getPayload();
 
-					if (ActualResponse.getReply() == LoginStatus.OK){
-						//show main form, hide this one
+					//if (ActualResponse.getReply() == LoginStatus.OK){
+						MainWindow mainWindow = new MainWindow(null, getSocket());
+						mainWindow.setVisible(true);
+						this.setVisible(false);
 						break;
-					}
+					//}
 				}
 				JOptionPane.showMessageDialog(null, "Invalid credentials");
 			}
