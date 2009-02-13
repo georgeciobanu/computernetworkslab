@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import java.lang.*;
 
 import common.Email;
-import common.Folders;
+import common.Folder;
 
 public class Main {
 
@@ -65,7 +65,7 @@ public class Main {
 
         /*  
          // TEST for ListofFolders method
-          Folders[] foo = ListofFolders();
+          Folder[] foo = ListofFolders();
           String fooName = foo[0].getFldName();
           String fooRecent = foo[0].getFldRecentMsg();
           String fooUnseen = foo[0].getFldUnseenMsg();
@@ -754,10 +754,10 @@ public class Main {
      * 					  
      * Parameters:		void 
      *						 				 
-     * Return: 			Folders[] 
+     * Return: 			Folder[] 
      * 
      ****************************************************************************/
-    public static Folders[] ListofFolders() throws IOException{
+    public static Folder[] ListofFolders() throws IOException{
 
         boolean DEBUG = true;
         boolean LOGing = true;
@@ -769,7 +769,7 @@ public class Main {
         int NumOfFolders = 0;
         String[] foldernames = new String[100];    // The maximum number of folders is 100
         String[] RawFoldernames = new String[100];
-        Folders[] Re_fld;
+        Folder[] Re_fld;
         String[] cmdS = new String[]{". status INBOX (recent)",". status INBOX (messages)",". status INBOX (messages)"};
 
         if (DEBUG)System.out.println(" This is ListofFolders()");
@@ -796,7 +796,7 @@ public class Main {
 
         // We have the name and number of all folders at this point 
         // So we start creating the list of folders 
-        Re_fld = new Folders[NumOfFolders];
+        Re_fld = new Folder[NumOfFolders];
         System.out.println(NumOfFolders);
         while (index < NumOfFolders) {
 
@@ -838,8 +838,8 @@ public class Main {
                 wait_index++;
             }
             
-            Re_fld[index] = new Folders(foldernames[index],rec,TMsg,Unsee);			
-            //Re_fld[index] = new Folders(foldernames[index],"","","");
+            Re_fld[index] = new Folder(foldernames[index],rec,TMsg,Unsee);			
+            //Re_fld[index] = new Folder(foldernames[index],"","","");
 
             
             wait_index = 0;
@@ -847,7 +847,7 @@ public class Main {
                 wait_index++;
             }
             */
-            Re_fld[index] = new Folders(foldernames[index],NumberOfEmail("RECENT",foldernames[index]),
+            Re_fld[index] = new Folder(foldernames[index],NumberOfEmail("RECENT",foldernames[index]),
                                         NumberOfEmail("MESSAGES",foldernames[index]),
                                         NumberOfEmail("UNSEEN",foldernames[index]));
 

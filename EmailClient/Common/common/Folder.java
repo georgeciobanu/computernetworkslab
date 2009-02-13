@@ -1,13 +1,13 @@
 package common; 
 
-public class Folders {
+public class Folder {
 
 	String FolderName = "undefined";
 	String RecentMsg = "undefined";
 	String TotalMsg = "undefined";
 	String UnseenMsg = "undefined";
 	
-	public Folders(String FlderName, String FldRecentMsg, String FldTotalMsg, String FldUnseenMsg){
+	public Folder(String FlderName, String FldRecentMsg, String FldTotalMsg, String FldUnseenMsg){
 		
 		FolderName	= FlderName;
 		RecentMsg	= FldRecentMsg;
