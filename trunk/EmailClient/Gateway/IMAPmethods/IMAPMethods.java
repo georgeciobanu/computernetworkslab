@@ -5,7 +5,7 @@
 
 //package telnettoimapserver;
 
-package IMAPmethods.src;
+package IMAPmethods;
 
 import java.io.*;
 import java.net.*;
