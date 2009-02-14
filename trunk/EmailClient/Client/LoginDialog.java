@@ -11,54 +11,66 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import java.io.ObjectInputStream;
-import java.net.*; 
+import java.net.*;
 import javax.swing.JButton;
 import common.*;
 
 /**
- * This code was edited or generated using CloudGarden's Jigloo
- * SWT/Swing GUI Builder, which is free for non-commercial
- * use. If Jigloo is being used commercially (ie, by a corporation,
- * company or business for any purpose whatever) then you
- * should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details.
- * Use of Jigloo implies acceptance of these licensing terms.
- * A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
- * THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
- * LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
+ * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
+ * Builder, which is free for non-commercial use. If Jigloo is being used
+ * commercially (ie, by a corporation, company or business for any purpose
+ * whatever) then you should purchase a license for each developer using Jigloo.
+ * Please visit www.cloudgarden.com for details. Use of Jigloo implies
+ * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
+ * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
+ * ANY CORPORATE OR COMMERCIAL PURPOSE.
  */
 public class LoginDialog extends javax.swing.JDialog {
 
 	private Socket _toGateway = null;
+
 	private JButton LoginButton;
+
 	private JLabel jLabel4;
+
 	private JLabel jLabel5;
+
 	private JTextField SMTPUsernameField;
+
 	private JTextField SMTPHostField;
+
 	private JPasswordField PasswordField;
+
 	private JTextField IMAPUsernameField;
+
 	private JTextField IMAPHostField;
+
 	private JLabel jLabel7;
+
 	private JLabel jLabel6;
+
 	private JPanel SMTPPanel;
+
 	private JLabel jLabel1;
+
 	private JLabel jLabel2;
+
 	private JLabel jLabel3;
+
 	private JPanel IMAPPanel;
+
 	/**
 	 * Auto-generated main method to display this JDialog
 	 */
-
 
 	public LoginDialog(JFrame frame, Socket ToGateway) {
 		super(frame);
 		initGUI();
 		_toGateway = ToGateway;
-		
+
 	}
 
-	public Socket getSocket()
-	{
+	public Socket getSocket() {
 		return _toGateway;
 	}
 
@@ -110,19 +122,20 @@ public class LoginDialog extends javax.swing.JDialog {
 				{
 					IMAPHostField = new JTextField();
 					IMAPPanel.add(IMAPHostField);
-					IMAPHostField.setText("host");
+					IMAPHostField.setText("mail.messagingengine.com");
 					IMAPHostField.setBounds(46, 42, 248, 21);
 				}
 				{
 					IMAPUsernameField = new JTextField();
 					IMAPPanel.add(IMAPUsernameField);
-					IMAPUsernameField.setText("Username");
-					IMAPUsernameField.setBounds(72, 69, 118, 21);
+					IMAPUsernameField.setText("ecse_489@myfastmail.com");
+					IMAPUsernameField.setBounds(72, 69, 222, 21);
 				}
 				{
 					PasswordField = new JPasswordField();
 					IMAPPanel.add(PasswordField);
 					PasswordField.setBounds(70, 104, 120, 21);
+					PasswordField.setText("ecse489");
 				}
 			}
 			{
@@ -168,47 +181,40 @@ public class LoginDialog extends javax.swing.JDialog {
 	}
 
 	private void LoginButtonMouseClicked(MouseEvent evt) {
-		System.out.println("LoginButton.mouseClicked, event="+evt);
-		myLoginInfo info = new myLoginInfo(
-				IMAPHostField.toString(),
-				IMAPUsernameField.toString(),
-				PasswordField.toString(),
-				SMTPHostField.toString(),
-				SMTPUsernameField.toString());
+		System.out.println("LoginButton.mouseClicked, event=" + evt);
+		myLoginInfo info = new myLoginInfo(IMAPHostField.getText(),
+				IMAPUsernameField.getText(), PasswordField.getText(),
+				SMTPHostField.getText(), SMTPUsernameField.getText());
 
-		ObjectSender.SendObject(info, MessageTypes.LOGIN_INFO, getSocket());	
+		ObjectSender.SendObject(info, MessageTypes.LOGIN_INFO, getSocket());
 
-		try{			
-			//ObjectInputStream response = new ObjectInputStream(getSocket().getInputStream());
-			//myContainer objResponse = new myContainer();
-			//objResponse =  (myContainer) response.readObject();
+		try {
+			ObjectInputStream response = new ObjectInputStream(getSocket()
+					.getInputStream());
+			myContainer objResponse = (myContainer) response.readObject();
 
-			while (true){
-				if (true){
-				//if (objResponse.getMsgType() == MessageTypes.LOGIN_RESPONSE){
+			while (true) {
+				if (true) {
+					if (objResponse.getMsgType() == MessageTypes.LOGIN_RESPONSE) {
 
-					//myLoginResponse ActualResponse = new myLoginResponse();
-					//ActualResponse = (myLoginResponse) objResponse.getPayload();
+						myLoginResponse ActualResponse = new myLoginResponse();
+						ActualResponse = (myLoginResponse) objResponse
+								.getPayload();
 
-					//if (ActualResponse.getReply() == LoginStatus.OK){
-						MainWindow mainWindow = new MainWindow(null, getSocket());
-						mainWindow.setVisible(true);
-						this.setVisible(false);
-						break;
-					//}
+						if (ActualResponse.getReply() == LoginStatus.OK) {
+							MainWindow mainWindow = new MainWindow(null,
+									getSocket());
+							mainWindow.setVisible(true);
+							this.setVisible(false);
+							break;
+						}
+					}
+					JOptionPane.showMessageDialog(null, "Invalid credentials");
 				}
-				JOptionPane.showMessageDialog(null, "Invalid credentials");
 			}
 
-
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-
-
-
-
 	}
 }

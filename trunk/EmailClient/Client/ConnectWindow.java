@@ -62,7 +62,7 @@ public class ConnectWindow extends javax.swing.JDialog {
 			{
 				GatewayAddressField = new JTextField();
 				getContentPane().add(GatewayAddressField, BorderLayout.NORTH);
-				GatewayAddressField.setText("address");
+				GatewayAddressField.setText("localhost");
 			}
 			setSize(400, 300);
 		} catch (Exception e) {
