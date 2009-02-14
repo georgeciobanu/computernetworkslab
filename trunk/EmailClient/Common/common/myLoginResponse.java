@@ -19,5 +19,5 @@ public class myLoginResponse implements Serializable {
 	
 	public myLoginResponse(){
 		this.reply = LoginStatus.INVALID_IMAP;
-	}
+	}	
 }
