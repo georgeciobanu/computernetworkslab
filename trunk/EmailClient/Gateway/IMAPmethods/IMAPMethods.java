@@ -15,6 +15,9 @@ import java.lang.*;
 
 import common.Email;
 import common.Folder;
+import common.LoginStatus;
+import common.myLoginInfo;
+import common.myLoginResponse;
 
 public class IMAPMethods {
  
@@ -882,9 +885,7 @@ public class IMAPMethods {
 	        		
 	        		 ReVal.setReply(LoginStatus.OK) ;
 	        	}
-	        	
-	            
-	            index++;
+
 	        }//else
 
     		return ReVal;
