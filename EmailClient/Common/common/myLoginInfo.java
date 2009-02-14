@@ -45,6 +45,9 @@ public class myLoginInfo implements Serializable {
 		STMPUsername = username;
 	}
 
+	public myLoginInfo(){	
+	}
+	
 	public myLoginInfo(String host, String username, String password, String username2, String host2) {		
 		IMAPHost = host;
 		IMAPUsername = username;

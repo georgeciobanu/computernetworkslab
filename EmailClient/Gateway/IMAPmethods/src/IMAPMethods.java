@@ -16,40 +16,41 @@ import java.lang.*;
 import common.Email;
 import common.Folder;
 
-public class Main {
+public class IMAPMethods {
  
     static Socket IMAPSocket = null;
     static PrintWriter out = null;
     static BufferedReader in = null;
     static char[] Serverrcv = null;
-    static int index = 0;
+    //static int index = 0;
     static String[] foldersName;
     static String[] Fnames = new String[100];
     static String checkIfINBOX = "";
-    //TODO: add some header here.     
+    //TODO: add some header here.  
+/*  
     public static void main(String[] args) throws IOException {
 
         String line = null;
         boolean DEBUG = true;
 
         // It opens the socket here.
-        OpenConnection();
+        //OpenConnection();
 
         // here we print the line after we create the socket.
         line = in.readLine();
         print(line);
 
         // here it logs into the IMAP server through the LOGIN method
-        Login();
+        //Login();
         
         // here it prints whatever comes from IMAP server after loging.
         line = in.readLine();
         if (DEBUG) print(line);
 
 
-        /* 
-            HERE ARE BUNCH OF TEST CASES TO TEST EACH METHOD
-        */
+        // 
+        //    HERE ARE BUNCH OF TEST CASES TO TEST EACH METHOD
+        //
         //System.out.println(CreateFolder("INBOX.DEL2"));
 
         // TEST: deleteEmail and moveEmail
@@ -94,8 +95,8 @@ public class Main {
         */
           
         // It closes the socket here.
-        CloseConnection(); 
-    }
+        //CloseConnection(); 
+    //}
 
 
     /**************************************************************************** 
@@ -728,10 +729,10 @@ public class Main {
      * Return: 			void 
      * 
      ****************************************************************************/
-    public static void OpenConnection()  throws IOException {
+    public static void OpenConnection(String host)  throws IOException {
 
         try {
-            IMAPSocket = new Socket("myfastmail.com", 143);
+            IMAPSocket = new Socket(host, 143);
             out = new PrintWriter(IMAPSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(
                                                          IMAPSocket.getInputStream()));
@@ -905,18 +906,19 @@ public class Main {
      * Return : void
      * 
      *****************************************************************************/
-    public static void Login(){
+    public static void Login(String username, String password){
 
         //This string is to add more command if needed.
         String[] cmdS  = new String[1];
 
-        cmdS[0] = ". LOGIN ecse_489@myfastmail.com ecse489";
+        cmdS[0] = ". LOGIN " + username + " " + password;
 
+        int index = 0;
+        
         if (index < cmdS.length) {
             out.println(cmdS[index]);
             System.out.println("--> "+cmdS[index]);
         }
-
         index++;
     }
 }

@@ -52,15 +52,11 @@ public class MainWindow extends javax.swing.JDialog {
 	/**
 	* Auto-generated main method to display this JDialog
 	*/
-	
-
-	
+		
 	public MainWindow(JFrame frame, Socket socket) {
-		toGateway = socket;
-		
-		
-		initGUI();
-		
+		super();
+		toGateway = socket;				
+		initGUI();		
 		refreshData();		
 	}
 	
@@ -69,7 +65,7 @@ public class MainWindow extends javax.swing.JDialog {
 		getDataFromGateway();		
 		DefaultMutableTreeNode top = new DefaultMutableTreeNode("Inbox");
 		GenerateTree(folders, top);
-		//FolderTree = new JTree();
+		FolderTree = new JTree();		
 		String [] columns = {"Number", "Subject", "From", "Date"};
 		EmailTable = new JTable(parseEmailList(emails, "Inbox"), columns );		
 	}
@@ -89,10 +85,13 @@ public class MainWindow extends javax.swing.JDialog {
 			emails[1][i] = emailList[i].getSubject();
 			
 			//TODO: Use the stuff Saleh added here
-			/*if (folder.getFldName() == "Sent"){
-				emails[1][i] = emailList.getTo();
-			}*/
-			emails[1][i] = emailList[i].getFrom().toString();
+			if (folder == "Sent"){
+				emails[1][i] = emailList[i].getTo();
+			}
+			else {
+				emails[1][i] = emailList[i].getFrom().toString();	
+			}
+						
 			emails[1][i] = emailList[i].getDate().toString();				
 		}
 		return emails;
