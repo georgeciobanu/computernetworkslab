@@ -99,6 +99,9 @@ public class MainWindow extends javax.swing.JDialog {
 	
 	private void getDataFromGateway(){
 		//send the request for the list of folders
+		String [] command = {"GET_FOLDER_LIST"};
+		
+		ObjectSender.SendObject(command, MessageTypes.CLIENT_COMMAND, getToGateway());
 		myContainer container = ObjectSender.WaitForObject(getToGateway());
 		
 		if (container.getMsgType() == MessageTypes.FOLDER_LIST ){

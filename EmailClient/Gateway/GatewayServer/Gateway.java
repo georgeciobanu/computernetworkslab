@@ -4,14 +4,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
 import SMTPBlackBox.*;
-import IMAPmethods.src.*;
+import IMAPmethods.*;
 
-import common.LoginStatus;
-import common.MessageTypes;
-import common.ObjectSender;
-import common.myContainer;
-import common.myLoginInfo;
-import common.myLoginResponse;
+import common.*;
 
 public class Gateway {
 
@@ -20,64 +15,104 @@ public class Gateway {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		//Create a ServerSocket to listen on
-		//Assign it to a client when it connects
-		//Wait for commands
-		//After each command arrives, parse it and send a reply
-		
+		// Create a ServerSocket to listen on
+		// Assign it to a client when it connects
+		// Wait for commands
+		// After each command arrives, parse it and send a reply
+
 		final int SERVER_PORT = 8123;
-		
+
 		ServerSocket server = null;
 		Socket client = null;
-		
-		
-		
-		try{
-			server = new ServerSocket(SERVER_PORT);
-			client = server.accept();
-			 
-		}catch (Exception e)
-		{
-			//do nothing for now
-		}
-		
-		
-		while (true){
-			
-		 myContainer container= ObjectSender.WaitForObject(client);
-		 
-		 
-		 if (container.getMsgType() == MessageTypes.LOGIN_INFO){
-			 //TODO: if (!loggedIn)
-			 myLoginInfo loginInfo = (myLoginInfo) container.getPayload();
-			 myLoginResponse response = null;
-			 try{
-				 IMAPMethods.OpenConnection(loginInfo.getIMAPHost());
-				 IMAPMethods.Login(loginInfo.getIMAPUsername(), loginInfo.getIMAPPassword());
-				 
-				 //if we got here then everything is OK
-		
-				 //Confirm to the client
-				 response = new myLoginResponse(LoginStatus.OK);
-				 ObjectSender.SendObject(response, MessageTypes.LOGIN_RESPONSE, client);
-				 
-			 }catch (Exception e)
-			 {
-				 response = new myLoginResponse(LoginStatus.INVALID_IMAP);
-				 ObjectSender.SendObject(response, MessageTypes.LOGIN_RESPONSE, client);
-				 //
-			 }
-		 }
-		 else if (container.getMsgType() == MessageTypes.FOLDER_LIST){
-			 
-		 }
-		 else if (container.getMsgType() == MessageTypes.MESSAGE_LIST){
-			 
-		 }
-		 
-		}
-		
-		
 
+		try {
+			server = new ServerSocket(SERVER_PORT);
+			System.out.println("Listening on port " + 
+								String.valueOf(SERVER_PORT) + 
+								" Waiting for connections...");
+			client = server.accept();
+			System.out.println("Client connected!");
+			
+
+		} catch (Exception e) {
+			// do nothing for now
+		}
+
+		while (true) {
+
+			System.out.println("Waiting for commands...");
+			myContainer container = ObjectSender.WaitForObject(client);
+
+			if (container.getMsgType() == MessageTypes.LOGIN_INFO) {
+				System.out.println("LOGIN INFO received");
+				// TODO: if (!loggedIn)
+				myLoginInfo loginInfo = (myLoginInfo) container.getPayload();
+				myLoginResponse response = null;
+				try {
+					System.out.println("Loging in to IMAP Server...");
+					IMAPMethods.OpenConnection(loginInfo.getIMAPHost());
+					IMAPMethods.Login(loginInfo.getIMAPUsername(), loginInfo
+							.getIMAPPassword());
+
+					// if we got here then everything is OK
+
+					System.out.println("Logged in, sending confirmation to client");
+					// Confirm to the client
+					response = new myLoginResponse(LoginStatus.OK);
+					ObjectSender.SendObject(response,
+							MessageTypes.LOGIN_RESPONSE, client);
+					System.out.println("Confirmation sent.");
+
+				} catch (Exception e) {					
+					response = new myLoginResponse(LoginStatus.INVALID_IMAP);
+					ObjectSender.SendObject(response,
+							MessageTypes.LOGIN_RESPONSE, client);
+					System.out.println("Login NOT successful.");
+					//
+				}
+			} else if (container.getMsgType() == MessageTypes.CLIENT_COMMAND) {
+				System.out.println("Command received.");
+				String[] command = (String[]) container.getPayload();
+
+				if (command.length > 0)
+					if (command[0].equals("GET_FOLDER_LIST")) {
+						try{					
+							Folder [] folders = IMAPMethods.ListofFolders();
+						 	ObjectSender.SendObject(folders, MessageTypes.FOLDER_LIST, client);
+						 	System.out.println("Sent list of folders to client.");
+						}catch(Exception e){
+							//
+						}
+						
+					} else if (command[0].equals("GET_EMAIL_LIST")) {
+						if (command.length > 1){
+							try{
+								ObjectSender.SendObject(
+										IMAPMethods.LisOfEmails(command[1]), 
+										MessageTypes.MESSAGE_LIST, 
+										client);
+							}catch (Exception e){
+								//
+							}							
+						}
+					} else if (command[0].compareTo("SEND_MESSAGE") == 0) {
+
+					} else if (command[0].compareTo("CREATE_FOLDER") == 0) {
+
+					} else if (command[0].compareTo("RENAME_FOLDER") == 0) {
+
+					} else if (command[0].compareTo("DELETE_FOLDER") == 0) {
+
+					} else if (command[0].compareTo("GET_EMAIL") == 0) {
+
+					} else if (command[0].compareTo("SEND_EMAIL") == 0) {
+
+					} else if (command[0].compareTo("MOVE_EMAIL") == 0) {
+
+					}
+
+			}
+
+		}
 	}
 }
