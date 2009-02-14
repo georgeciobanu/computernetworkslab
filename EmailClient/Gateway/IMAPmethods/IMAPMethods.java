@@ -13,11 +13,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.lang.*;
 
-import common.Email;
-import common.Folder;
-import common.LoginStatus;
-import common.myLoginInfo;
-import common.myLoginResponse;
+import common.*;
+
 
 public class IMAPMethods {
  
@@ -28,7 +25,78 @@ public class IMAPMethods {
     //static int index = 0;
     static String[] foldersName;
     static String[] Fnames = new String[100];
-    static String checkIfINBOX = "";  
+    static String checkIfINBOX = "";
+    //TODO: add some header here.  
+/*  
+    public static void main(String[] args) throws IOException {
+
+        String line = null;
+        boolean DEBUG = true;
+
+        // It opens the socket here.
+        //OpenConnection();
+
+        // here we print the line after we create the socket.
+        line = in.readLine();
+        print(line);
+
+        // here it logs into the IMAP server through the LOGIN method
+        //Login();
+        
+        // here it prints whatever comes from IMAP server after loging.
+        line = in.readLine();
+        if (DEBUG) print(line);
+
+
+        // 
+        //    HERE ARE BUNCH OF TEST CASES TO TEST EACH METHOD
+        //
+        //System.out.println(CreateFolder("INBOX.DEL2"));
+
+        // TEST: deleteEmail and moveEmail
+        Email[] fooEmails = LisOfEmails("INBOX");
+        Email foo = fooEmails[0];
+        System.out.println(foo.getEmailNumber());
+        System.out.println(foo.getSubject());
+        //deleteEmail
+        //System.out.println(deleteEmail(foo));
+        
+        //moveEmail
+        //System.out.println(moveEmail(foo,"something")); 
+
+        /*  
+         // TEST for ListofFolders method
+          Folder[] foo = ListofFolders();
+          String fooName = foo[0].getFldName();
+          String fooRecent = foo[0].getFldRecentMsg();
+          String fooUnseen = foo[0].getFldUnseenMsg();
+          String fooTotal = foo[0].getFldTotalMsg();
+          System.out.println("Folder Name:\t"+fooName);
+          System.out.println("Recent Emails:\t"+fooRecent);
+          System.out.println("Unseen Emails:\t"+fooUnseen);
+          System.out.println("Total Emails:\t"+fooTotal);
+        */ 
+
+        /* 
+          // TEST for ListOfEmails AND getTHEamil methods
+          Email[] fooEmails = LisOfEmails("INBOX");
+          Email foo = fooEmails[2];
+          
+          System.out.println(fooEmails.length);
+          System.out.println(foo.getEmailNumber());
+          System.out.println(foo.getSubject());
+          System.out.println(foo.getDate());
+          System.out.println(foo.getFrom());
+          System.out.println(foo.gethasatt());
+          
+          //this part is to test the getTHEemail()
+          Email fullFoo = getTHEemail(foo);
+          System.out.print("\nBody:\n"+fullFoo.getBody());
+        */
+          
+        // It closes the socket here.
+        //CloseConnection(); 
+    //}
 
 
     /**************************************************************************** 
@@ -598,43 +666,41 @@ public class IMAPMethods {
      * 
      *************************************************************************************/
     public static String NumberOfEmail(String statusType, String folderName) throws IOException {
-    	
-    	
-    	boolean DEBUG = false;
-    	boolean LOGing = false;
-    	String line = "";
-    	int index = 0;
-    	String ReV = "";
-    	String delims = "[( "+statusType+"]";
-    	String[] status_rv;
-    	String cmd = ". STATUS \""+folderName+"\" ("+statusType+")";
 
-    	if(DEBUG)System.out.println(" This is NumberOfEmail");
-    	    	
-    		cmd(cmd);
-    		line = in.readLine();
-	        if(LOGing) print("1"+line);
-	        while(line != null){
-	                    	
-	        	if( line.substring(0,8).equalsIgnoreCase("* STATUS")){
-					status_rv  = line.split(delims);
-					ReV = status_rv[status_rv.length-1].replace(")", "");
-	        	}	
-	        	
-	    		Pattern p_end = Pattern.compile("^\\.\\s\\bOK\\b\\s\\bCompleted\\b");
-	        	Matcher m_end = p_end.matcher(line);
-	        	if(m_end.matches()) break;
-	        	
-	        	//if(line.substring(0,5).equalsIgnoreCase(". BAD"))  ReV = "-1";break;
-	        	
-	        	line = in.readLine();
-	        	if(LOGing)print(line);
-	        }
-	        if(DEBUG)System.out.println("DONE");
-	        if(DEBUG)System.out.println("ReV == "+ReV);
-	        
-	        return ReV;
-    	}
+        //DEBUG and LOGing varibales
+        boolean DEBUG = false;
+        boolean LOGing = false;
+
+        String line = "";
+        int index = 0;
+        String ReV = "";
+        String delims = "[( "+statusType+"]";
+        String[] status_rv;
+        String cmd = ". STATUS "+folderName+" ("+statusType+")";
+
+        if (DEBUG)System.out.println(" This is NumberOfEmail");
+
+        cmd(cmd);
+        line = in.readLine();
+        if (LOGing) print("1"+line);
+        while (line != null) {
+
+            if ( line.substring(0,8).equalsIgnoreCase("* STATUS")) {
+                status_rv  = line.split(delims);
+                ReV = status_rv[status_rv.length-1].replace(")", "");
+            }
+
+            if ( line.substring(0,4).equalsIgnoreCase(". OK")) break;
+            //if(line.substring(0,5).equalsIgnoreCase(". BAD"))  ReV = "-1";break;
+
+            line = in.readLine();
+            if (LOGing)print(line);
+        }
+        if (DEBUG)System.out.println("DONE");
+        if (DEBUG)System.out.println("ReV == "+ReV);
+
+        return ReV;
+    }
 
     /***************************************************************************
      * Method Name:		CloseConnection()
@@ -656,55 +722,30 @@ public class IMAPMethods {
     /***************************************************************************
      * Method Name:		OpenConnection()
      * 
-     * Description:		This method open the socket to IMAP server and then call the Login method.		
+     * Description:		
      * 					  
-     * Parameters:		myLoginInfo userInfo 
+     * Parameters:		void 
      *						 				 
-     * Return: 			myLoginResponse ReVal
-     * @return 
+     * Return: 			void 
      * 
      ****************************************************************************/
-    public static myLoginResponse OpenConnection(myLoginInfo userInfo)  throws IOException {
-    	
-    	// Initializing the return value (i.e. ReVal ) 
-    	myLoginResponse ReVal = new myLoginResponse();
-    		ReVal.setReply(LoginStatus.INVALID_IMAP);
-    		
-    	//check to see if a null argument has been passed . 
-    	if(userInfo == null){
-    		
-    		return ReVal;
-    	}
-    	else{
-    		
-    		//Setting the value for IMAP server.
-    		String IMAPHOSTNAME = userInfo.getIMAPHost();
-    		int IMAPPORT = 143;
-    		
-    		try {
-            
-    			IMAPSocket = new Socket(IMAPHOSTNAME, IMAPPORT);
-                out = new PrintWriter(IMAPSocket.getOutputStream(), true);
-                in = new BufferedReader(new InputStreamReader(
-                                            IMAPSocket.getInputStream()));
+    public static void OpenConnection(String host)  throws IOException {
 
-            } catch (UnknownHostException e) {
-                System.err.println("Don't know about host: "+IMAPHOSTNAME);
-                System.exit(1);
-            } catch (IOException e) {
-                System.err.println("Couldn't get I/O for "
-                                   + "the connection to: "+IMAPHOSTNAME);
-                System.exit(1);
-            }//catch
-            
-            //At this point of code the connection to IMAP server has been made
-            // now we have to pass the information to server to be able to login
-            // so we call the "Login" method.
-            Login(userInfo);
-            
-    	}//else
-        
-    return ReVal;
+        try {
+            IMAPSocket = new Socket(host, 143);
+            out = new PrintWriter(IMAPSocket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(
+                                                         IMAPSocket.getInputStream()));
+
+        } catch (UnknownHostException e) {
+            System.err.println("Don't know about host: myfastmail.com.");
+            System.exit(1);
+        } catch (IOException e) {
+            System.err.println("Couldn't get I/O for "
+                               + "the connection to: myfastmail.com.");
+            System.exit(1);
+        }
+
     }
     //TODO: fix this header 
     /***************************************************************************
@@ -825,71 +866,26 @@ public class IMAPMethods {
     /**************************************************************************** 
      * This method is being used ust to loginto the IMAP server
      * 
-     * Method name:	 	Login()
+     * Method name : Login()
      * 
-     * Parameters:		myLoginInfo IMAPPassword
-     * 					myLoginInfo IMAPUsername 		
-     * 
-     * Return : 		myLoginResponse
-     * @throws IOException 
+     * Return : void
      * 
      *****************************************************************************/
-    public static myLoginResponse Login(myLoginInfo userInfo) throws IOException{
+    public static void Login(String username, String password){
 
-    	//Debugging tools 
-    	boolean DEBUG = true;
-    	boolean LOGing = true;
-    	
-    	// At this point it initiates the return value ( ReVal ) as type myLoginResponse.
-    	// and it set the value as INVALID_IMAP
-    	myLoginResponse ReVal = new myLoginResponse();
-    					ReVal.setReply(LoginStatus.INVALID_IMAP);
-    	
-    	//This string is to add more command if needed.
-        String line = null;
-        // it is to pattern something in this format of string.
-        // ". OK User logged in SESSIONID=<slot807-22753-1234467063-1>"
-        String 	OK = "^.\\s\\bOK\\b\\s\\bUser\\b\\s\\blogged\\b\\s\\bin\\b\\s\\bSESSIONID\\b.*";
-        boolean b_OK = false;
+        //This string is to add more command if needed.
+        String[] cmdS  = new String[1];
 
+        cmdS[0] = ". LOGIN " + username + " " + password;
+
+        int index = 0;
         
-    	// check if the parameter is null
-    	if(userInfo == null){
-    		
-    		// if it has a null argument as userInfo.
-    		return ReVal;
-    	}
-    	else{
-    		
-	    		//User Information to connect to IMAP server.
-	        	String username = userInfo.getIMAPUsername();		 
-	        	String password = userInfo.getIMAPPassword();
-	            String LOGIN = ". LOGIN "+username+" "+password; 
-	        	//cmdS[0] = ". LOGIN ecse_489@myfastmail.com ecse489";
-	        	 
-	        	
-	                //it writes the command into the socket
-	            	out.println(LOGIN);
-	            	// it prints the command passed to the socket.
-	                if(LOGing) System.out.println("--> "+LOGIN);
-	                //it reads whatever the server sends back.
-	                line = in.readLine();
-	                if(LOGing) print(line);  
-	            
-	            //here it compares the return text with OK pattern to see if we got the right thing back.
-	    		Pattern p_OK = Pattern.compile(OK);
-	    		Matcher m_OK = p_OK.matcher(line);
-	        			b_OK = m_OK.matches();
-	        	
-	        	if(b_OK){
-	        		
-	        		 ReVal.setReply(LoginStatus.OK) ;
-	        	}
-
-	        }//else
-
-    		return ReVal;
-    	}
+        if (index < cmdS.length) {
+            out.println(cmdS[index]);
+            System.out.println("--> "+cmdS[index]);
+        }
+        index++;
+    }
 }
 
 
