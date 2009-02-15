@@ -676,7 +676,7 @@ public class IMAPMethods {
         String ReV = "";
         String delims = "[( "+statusType+"]";
         String[] status_rv;
-        String cmd = ". STATUS "+folderName+" ("+statusType+")";
+        String cmd = ". STATUS \""+folderName+"\" ("+statusType+")";
 
         if (DEBUG)System.out.println(" This is NumberOfEmail");
 
@@ -692,10 +692,11 @@ public class IMAPMethods {
 
             if ( line.substring(0,4).equalsIgnoreCase(". OK")) break;
             //if(line.substring(0,5).equalsIgnoreCase(". BAD"))  ReV = "-1";break;
-
-            line = in.readLine();
-            if (LOGing)print(line);
-        }
+            
+            	line = in.readLine(); 
+            	if (LOGing)print(line);
+            
+        } 
         if (DEBUG)System.out.println("DONE");
         if (DEBUG)System.out.println("ReV == "+ReV);
 

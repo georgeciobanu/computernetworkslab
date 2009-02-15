@@ -56,16 +56,17 @@ public class MainWindow extends javax.swing.JDialog {
 	public MainWindow(JFrame frame, Socket socket) {
 		super();
 		toGateway = socket;				
+		
+		refreshData();
 		initGUI();		
-		refreshData();		
 	}
 	
 	private void refreshData(){
 //		rebuild the gui based on received data
 		getDataFromGateway();		
 		DefaultMutableTreeNode top = new DefaultMutableTreeNode("Inbox");
-		GenerateTree(folders, top);
-		FolderTree = new JTree();		
+		GenerateTree(folders, top);		
+		FolderTree = new JTree(top);		
 		String [] columns = {"Number", "Subject", "From", "Date"};
 		EmailTable = new JTable(parseEmailList(emails, "Inbox"), columns );		
 	}
@@ -79,20 +80,22 @@ public class MainWindow extends javax.swing.JDialog {
 	}
 	
 	private String [][] parseEmailList(Email [] emailList, String folder){
-		String [][] emails = new String[4][emailList.length];
+		if (emailList == null)
+			return new String[1][1];
+		String [][] emails = new String[emailList.length][4];
 		for (int i= 0; i < emailList.length; i++){
-			emails[0][i] = emailList[i].getEmailNumber().toString();
-			emails[1][i] = emailList[i].getSubject();
+			emails[i][0] = emailList[i].getEmailNumber().toString();
+			emails[i][1] = emailList[i].getSubject();
 			
 			//TODO: Use the stuff Saleh added here
 			if (folder == "Sent"){
-				emails[1][i] = emailList[i].getTo();
+				emails[i][2] = emailList[i].getTo();
 			}
 			else {
-				emails[1][i] = emailList[i].getFrom().toString();	
+				emails[i][2] = emailList[i].getFrom().toString();	
 			}
 						
-			emails[1][i] = emailList[i].getDate().toString();				
+			emails[i][3] = emailList[i].getDate().toString();				
 		}
 		return emails;
 	}
@@ -105,11 +108,16 @@ public class MainWindow extends javax.swing.JDialog {
 		myContainer container = ObjectSender.WaitForObject(getToGateway());
 		
 		if (container.getMsgType() == MessageTypes.FOLDER_LIST ){
-			folders = (Folder []) container.getPayload();
-			
+			folders = (Folder []) container.getPayload();			
 		}
-		else if (container.getMsgType() == MessageTypes.MESSAGE_LIST){
-			emails = (Email []) container.getPayload();
+		
+		command = new String [] {"GET_EMAIL_LIST", "INBOX"};
+		
+		ObjectSender.SendObject(command, MessageTypes.CLIENT_COMMAND, getToGateway());
+		myContainer container2 = ObjectSender.WaitForObject(getToGateway());
+		
+		if (container2.getMsgType() == MessageTypes.MESSAGE_LIST){
+			emails = (Email []) container2.getPayload();
 		}
 		//else throw new IOException();			
 	}
@@ -126,7 +134,7 @@ public class MainWindow extends javax.swing.JDialog {
 				jPanel1.setBounds(0, 37, 186, 316);
 				jPanel1.setLayout(jPanel1Layout);
 				{
-					FolderTree = new JTree();
+					//FolderTree = new JTree();
 					jPanel1.add(FolderTree, BorderLayout.CENTER);
 					FolderTree.setPreferredSize(new java.awt.Dimension(186, 316));
 				}
@@ -141,11 +149,11 @@ public class MainWindow extends javax.swing.JDialog {
 					TableModel jTable1Model = 
 						new DefaultTableModel(
 								new String[][] { { "One", "Two" }, { "Three", "Four" } },
-								new String[] { "Column 1", "Column 2" });
-					EmailTable = new JTable();
+								new String[] { "Column 1", "Column 2" });				
+					//EmailTable = new JTable();
 					jPanel2.add(EmailTable, BorderLayout.CENTER);
-					EmailTable.setModel(jTable1Model);
-					EmailTable.setPreferredSize(new java.awt.Dimension(418, 294));
+					//EmailTable.setModel(jTable1Model);
+					EmailTable.setPreferredSize(new java.awt.Dimension(418, 272));
 				}
 			}
 			{

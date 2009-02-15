@@ -81,7 +81,7 @@ public class Gateway {
 						 	ObjectSender.SendObject(folders, MessageTypes.FOLDER_LIST, client);
 						 	System.out.println("Sent list of folders to client.");
 						}catch(Exception e){
-							//
+							//ok, i know
 						}
 						
 					} else if (command[0].equals("GET_EMAIL_LIST")) {
