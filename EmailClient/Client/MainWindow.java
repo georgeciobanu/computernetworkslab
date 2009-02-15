@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -72,6 +74,11 @@ public class MainWindow extends javax.swing.JDialog {
 		DefaultMutableTreeNode top = new DefaultMutableTreeNode("Inbox");
 		GenerateTree(folders, top);		
 		FolderTree = new JTree(top);		
+		FolderTree.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent evt) {
+				FolderTreeValueChanged(evt);
+			}
+		});
 		String [] columns = {"Number", "Subject", "From", "Date"};
 		EmailTable = new JTable(parseEmailList(emails, "Inbox"), columns );		
 		EmailTable.addMouseListener(new MouseAdapter() {
@@ -254,6 +261,33 @@ public class MainWindow extends javax.swing.JDialog {
 	private void thisWindowClosing(WindowEvent evt) {
 		System.out.println("this.windowClosing, event="+evt);
 		System.exit(0);
+		
+	}
+	
+	private void FolderTreeValueChanged(TreeSelectionEvent evt) {
+		System.out.println("FolderTree.valueChanged, event="+evt);
+		Folder current = (Folder)((DefaultMutableTreeNode)evt.getNewLeadSelectionPath().getLastPathComponent()).getUserObject();		
+		String [] command = {"GET_EMAIL_LIST",current.toString()};
+		
+		ObjectSender.SendObject(command, MessageTypes.CLIENT_COMMAND, getToGateway());
+		myContainer container2 = ObjectSender.WaitForObject(getToGateway());
+		
+		if (container2.getMsgType() == MessageTypes.MESSAGE_LIST){
+			emails = (Email []) container2.getPayload();
+			
+		}
+		String [] columns = {"Number", "Subject", "From", "Date"};					
+		
+		
+	    TableModel model = new DefaultTableModel(parseEmailList(emails, "Inbox"), columns ) {
+	        public boolean isCellEditable(int rowIndex, int mColIndex) {
+	            return false;
+	        }
+	        
+	    };
+	    EmailTable.setModel(model);
+	    
+	    
 		
 	}
 
