@@ -1,6 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -58,6 +60,7 @@ public class LoginDialog extends javax.swing.JDialog {
 	private JLabel jLabel3;
 
 	private JPanel IMAPPanel;
+	private JFrame parentFrame;
 
 	/**
 	 * Auto-generated main method to display this JDialog
@@ -67,7 +70,7 @@ public class LoginDialog extends javax.swing.JDialog {
 		super(frame);
 		initGUI();
 		_toGateway = ToGateway;
-
+		parentFrame = frame;
 	}
 
 	public Socket getSocket() {
@@ -78,6 +81,12 @@ public class LoginDialog extends javax.swing.JDialog {
 		try {
 			{
 				getContentPane().setLayout(null);
+				this.addWindowListener(new WindowAdapter() {
+					public void windowClosing(WindowEvent evt) {
+						System.out.println("this.windowClosing, event="+evt);
+						System.exit(0);
+					}
+				});
 			}
 			{
 				LoginButton = new JButton();

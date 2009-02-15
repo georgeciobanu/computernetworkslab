@@ -81,7 +81,7 @@ public class Gateway {
 						 	ObjectSender.SendObject(folders, MessageTypes.FOLDER_LIST, client);
 						 	System.out.println("Sent list of folders to client.");
 						}catch(Exception e){
-							//ok, i know
+							// ok, i know
 						}
 						
 					} else if (command[0].equals("GET_EMAIL_LIST")) {
@@ -94,20 +94,67 @@ public class Gateway {
 							}catch (Exception e){
 								//
 							}							
-						}
-					} else if (command[0].compareTo("SEND_MESSAGE") == 0) {
-
+						}					
 					} else if (command[0].compareTo("CREATE_FOLDER") == 0) {
 
+						if (command.length > 1){
+							try{								
+								IMAPMethods.CreateFolder(command[1]);
+								ObjectSender.SendObject(null, 
+										MessageTypes.CONFIRMATION_OK, 
+										client);
+							}catch (Exception e){
+								//
+							}
+						}
+
 					} else if (command[0].compareTo("RENAME_FOLDER") == 0) {
+						
 
 					} else if (command[0].compareTo("DELETE_FOLDER") == 0) {
-
+						
+						if (command.length > 1){
+							try{
+								
+								IMAPMethods.DeleteFolder(command[1]);
+								ObjectSender.SendObject(
+										IMAPMethods.getTHEemail(command[1]), 
+										MessageTypes.MESSAGE, 
+										client);
+							}catch (Exception e){
+								//
+							}			
+						}
 					} else if (command[0].compareTo("GET_EMAIL") == 0) {
+						if (command.length > 1){
+							try{
+								ObjectSender.SendObject(
+										IMAPMethods.getTHEemail(command[1]), 
+										MessageTypes.MESSAGE, 
+										client);
+							}catch (Exception e){
+								//
+							}							
+						}
 
 					} else if (command[0].compareTo("SEND_EMAIL") == 0) {
+						
+					
 
-					} else if (command[0].compareTo("MOVE_EMAIL") == 0) {
+					} else if (command[0].compareTo("MOVE_EMAIL") == 0) {						
+						/*
+						if (command.length > 1){
+							try{
+								
+								//IMAPMethods.moveEmail(command[1], command[2]);
+								ObjectSender.SendObject(
+										null, 
+										MessageTypes.CONFIRMATION_OK, 
+										client);
+							}catch (Exception e){
+								//
+							}							
+						}*/
 
 					}
 
