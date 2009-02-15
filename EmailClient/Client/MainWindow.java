@@ -1,6 +1,10 @@
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -14,6 +18,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import com.sun.corba.se.impl.protocol.giopmsgheaders.MessageBase;
 
 import common.Email;
 import common.Folder;
@@ -55,8 +61,7 @@ public class MainWindow extends javax.swing.JDialog {
 		
 	public MainWindow(JFrame frame, Socket socket) {
 		super();
-		toGateway = socket;				
-		
+		toGateway = socket;						
 		refreshData();
 		initGUI();		
 	}
@@ -69,6 +74,23 @@ public class MainWindow extends javax.swing.JDialog {
 		FolderTree = new JTree(top);		
 		String [] columns = {"Number", "Subject", "From", "Date"};
 		EmailTable = new JTable(parseEmailList(emails, "Inbox"), columns );		
+		EmailTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent evt) {
+				EmailTableMouseClicked(evt);
+			}
+		});
+		
+		
+	    TableModel model = new DefaultTableModel(parseEmailList(emails, "Inbox"), columns ) {
+	        public boolean isCellEditable(int rowIndex, int mColIndex) {
+	            return false;
+	        }
+	        
+	    };
+	    EmailTable.setModel(model);
+	    
+
+		
 	}
 	private DefaultMutableTreeNode GenerateTree(Folder [] folders, DefaultMutableTreeNode node){
 		for (int i = 0; i < folders.length; i++){
@@ -126,6 +148,11 @@ public class MainWindow extends javax.swing.JDialog {
 		try {
 			{
 				getContentPane().setLayout(null);
+				this.addWindowListener(new WindowAdapter() {
+					public void windowClosing(WindowEvent evt) {
+						thisWindowClosing(evt);
+					}
+				});
 			}
 			{
 				jPanel1 = new JPanel();
@@ -150,10 +177,10 @@ public class MainWindow extends javax.swing.JDialog {
 						new DefaultTableModel(
 								new String[][] { { "One", "Two" }, { "Three", "Four" } },
 								new String[] { "Column 1", "Column 2" });				
-					//EmailTable = new JTable();
+					//EmailTable = new JTable();					
 					jPanel2.add(EmailTable, BorderLayout.CENTER);
 					//EmailTable.setModel(jTable1Model);
-					EmailTable.setPreferredSize(new java.awt.Dimension(418, 272));
+					EmailTable.setPreferredSize(new java.awt.Dimension(418, 316));
 				}
 			}
 			{
@@ -201,6 +228,33 @@ public class MainWindow extends javax.swing.JDialog {
 
 	public void setToGateway(Socket gateway) {
 		toGateway = gateway;
+	}
+	
+	private void EmailTableMouseClicked(MouseEvent evt) {
+		if (evt.getClickCount() > 1){//double click
+			
+			String [] command = {"GET_EMAIL", EmailTable.getValueAt(EmailTable.getSelectedRow(),0 ).toString()};
+			ObjectSender.SendObject(command, MessageTypes.CLIENT_COMMAND, getToGateway());
+			
+			myContainer container = ObjectSender.WaitForObject(getToGateway());
+			
+			if (container.getMsgType() == MessageTypes.MESSAGE){										
+				ViewMessageDialog messageBody = 
+					new ViewMessageDialog(null, 
+							EmailTable.getValueAt(EmailTable.getSelectedRow(),1 ).toString(),
+							(Email)container.getPayload());
+				messageBody.setModalityType(ModalityType.APPLICATION_MODAL);
+				messageBody.setVisible(true);
+			}
+		}
+		
+
+	}
+	
+	private void thisWindowClosing(WindowEvent evt) {
+		System.out.println("this.windowClosing, event="+evt);
+		System.exit(0);
+		
 	}
 
 }

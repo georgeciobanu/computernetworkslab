@@ -20,6 +20,8 @@ public class Email implements Serializable{
 	boolean hasatt = false;
 	boolean hasnoatt = false;
 	
+	public Email(){}
+	
 	public Email( String date, String Sbj, String body, String frm, String to,String num,String fldName,String[] flags){ 
 
 		// Strings 

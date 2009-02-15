@@ -1,6 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 
 
@@ -78,11 +80,21 @@ public class ConnectWindow extends javax.swing.JDialog {
 			
 			LoginDialog LoginWindow = new LoginDialog(null, ToGateway );
 			this.setVisible(false);
+			this.addWindowListener(new WindowAdapter() {
+				public void windowClosing(WindowEvent evt) {
+					thisWindowClosing(evt);
+				}
+			});
 			LoginWindow.setVisible(true);					
 		}
 		catch (Exception e){
 			JOptionPane.showMessageDialog(null,"Error occured, exception details ="+ e.toString());
 		}					
+	}
+	
+	private void thisWindowClosing(WindowEvent evt) {
+		System.out.println("this.windowClosing, event="+evt);
+		System.exit(0);
 	}
 
 }

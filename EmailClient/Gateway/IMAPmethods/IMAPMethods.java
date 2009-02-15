@@ -273,16 +273,15 @@ public class IMAPMethods {
      *   		ERROR:	Email NULL 	
      *   
      ****************************************************************************/
-    public static Email getTHEemail(Email theEmail) throws IOException{
+    public static Email getTHEemail(String emailNum) throws IOException{
 
         //debug tool variables
         boolean LOGing = true;
         boolean DEBUG  = true;
 
         //Return Value
-        Email ReVal = null;
-
-        String emailNum = theEmail.getEmailNumber();
+        Email ReVal = new Email();
+        
         String line = null;
         String emailBody = "";
         int lineCounter = 0;  // we use this variable to get rid of the first line of email
@@ -333,18 +332,16 @@ public class IMAPMethods {
             lineCounter++;      
         }//while
 
+        // setting the body field of email
+        ReVal.setBody(emailBody);
+        ReVal.setEmailNumber(emailNum);
         // At this point we can update the email by putting the email body into the
         // its field.
-        if (DEBUG) System.out.println("Here we are updating the given email with new body ...");
-        if (DEBUG) System.out.println("___here is the old body:");
-        if (DEBUG) System.out.print(theEmail.getBody()+"\n");
-        if (DEBUG) System.out.println("___here is the new body:");
+
+        if (DEBUG) System.out.println("___Here is the new body:");
         if (DEBUG) System.out.print(emailBody+"\n");
 
-        // setting the body field of email
-        theEmail.setBody(emailBody);
 
-        ReVal = theEmail; 
 
         return ReVal;
     }
