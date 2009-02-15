@@ -1,6 +1,8 @@
 package common; 
 
-public class Folder {
+import java.io.Serializable;
+
+public class Folder implements Serializable{
 
 	String FolderName = "undefined";
 	String RecentMsg = "undefined";
@@ -14,6 +16,10 @@ public class Folder {
 		TotalMsg	= FldTotalMsg;
 		UnseenMsg	= FldUnseenMsg;
 		
+	}
+	
+	public String toString(){
+		return this.FolderName;
 	}
 	
 	public void setFldName( String name){

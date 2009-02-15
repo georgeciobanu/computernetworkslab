@@ -1,6 +1,8 @@
 package common;
 
-public class Email {
+import java.io.Serializable;
+
+public class Email implements Serializable{
 
 	String Date = "";
 	String Subject = "";
