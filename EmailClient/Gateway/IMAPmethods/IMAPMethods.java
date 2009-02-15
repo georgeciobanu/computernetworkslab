@@ -457,6 +457,7 @@ public class IMAPMethods {
      * 				
      * 
      * Return: 			Email[] ListOfEmials
+     * 					NULL if the folder is empty.	
      *   
      *************************************************************************/
     public static Email[] LisOfEmails(String FolderName) throws IOException {
@@ -501,7 +502,17 @@ public class IMAPMethods {
         //TODO: check to see if the FolderName has to be with INBOX. it would be taken care of in NumberOfEmail's method????   
         // This gets the total number of email per folder.
         int TotalNumEmails_perFld = Integer.parseInt(NumberOfEmail("MESSAGES",FolderName));
-
+        
+        /*
+         * EARLY RETURN 
+         * 
+         * It checks if there is any email in the folder, if there is none it simply returns NULL here.
+         * */
+        if(TotalNumEmails_perFld == 0){
+        	
+        	return null;
+        }
+        	
         //----------> here we create an array of Email based on this number here.
         ListOfEmails = new Email[TotalNumEmails_perFld];
 
