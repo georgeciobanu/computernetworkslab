@@ -78,7 +78,7 @@ public class ConnectWindow extends javax.swing.JDialog {
 		try{
 			Socket ToGateway = new Socket(GatewayAddressField.getText(), 8123);			
 			
-			LoginDialog LoginWindow = new LoginDialog(null, ToGateway );
+			LoginDialog LoginWindow = new LoginDialog(null, ToGateway);
 			this.setVisible(false);
 			this.addWindowListener(new WindowAdapter() {
 				public void windowClosing(WindowEvent evt) {

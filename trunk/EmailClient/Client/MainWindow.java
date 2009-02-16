@@ -19,7 +19,9 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.text.Position.Bias;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import com.sun.corba.se.impl.protocol.giopmsgheaders.MessageBase;
 
@@ -56,14 +58,17 @@ public class MainWindow extends javax.swing.JDialog {
 	private Socket toGateway = null;
 	private Folder [] folders = null;
 	private Email [] emails = null; 
+	private String SMTPuser, SMTPhost;
 
 	/**
 	* Auto-generated main method to display this JDialog
 	*/
 		
-	public MainWindow(JFrame frame, Socket socket) {
+	public MainWindow(JFrame frame, Socket socket,String SMTPHost, String SMTPUser) {
 		super();
 		toGateway = socket;						
+		SMTPuser = SMTPUser;
+		SMTPhost = SMTPHost;
 		refreshData();
 		initGUI();		
 	}
@@ -94,18 +99,42 @@ public class MainWindow extends javax.swing.JDialog {
 	        }
 	        
 	    };
-	    EmailTable.setModel(model);
-	    
-
-		
+	    EmailTable.setModel(model);	    		
 	}
-	private DefaultMutableTreeNode GenerateTree(Folder [] folders, DefaultMutableTreeNode node){
-		for (int i = 0; i < folders.length; i++){
+	
+	private void createNode(DefaultMutableTreeNode top, String[] path, int pos, Folder folder){
+		int i = 0;
+		if ( ((String)(top.getUserObject())).equalsIgnoreCase(path[path.length-2]) ){
+			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(folder);
+			top.add(newNode);
+			return;
+		}
+		else{
+			for (i =0; i < top.getChildCount(); i++){
+				if ( ((Folder)((DefaultMutableTreeNode)top.getChildAt(i)).getUserObject()).toString().equalsIgnoreCase(path[pos+1]) )			
+					break;
+			}
+			createNode((DefaultMutableTreeNode) top.getChildAt(i), path, pos+1, folder);
+		}
+	}
+	
+	private DefaultMutableTreeNode GenerateTree(Folder [] folders, DefaultMutableTreeNode top){			
+		for (int i = 1; i < folders.length; i++){
 			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(folders[i]);
-			node.add(newNode);
+			String [] path = folders[i].getFldName().split("[.]");
+			
+			createNode(top, path, 0, folders[i]);
+			
+			/*for (int j = 0; j < result.length; j++){				
+				if (FolderTree.getNextMatch(result, 0, Bias.Forward) == null){
+					
+				}
+			}*/
+				
+			
 			//Recursively call to add all children
 		}
-		return node;
+		return top;
 	}
 	
 	private String [][] parseEmailList(Email [] emailList, String folder){
@@ -201,6 +230,11 @@ public class MainWindow extends javax.swing.JDialog {
 					ComposeButton = new JButton();
 					jPanel3.add(ComposeButton);
 					ComposeButton.setText("Compose");
+					ComposeButton.addMouseListener(new MouseAdapter() {
+						public void mouseClicked(MouseEvent evt) {
+							ComposeButtonMouseClicked(evt);
+						}
+					});
 				}
 				{
 					NewFolderButton = new JButton();
@@ -289,6 +323,13 @@ public class MainWindow extends javax.swing.JDialog {
 	    
 	    
 		
+	}
+	
+	private void ComposeButtonMouseClicked(MouseEvent evt) {
+		System.out.println("ComposeButton.mouseClicked, event="+evt);
+		ComposeDialog compose = new ComposeDialog(null, getToGateway(), SMTPhost, SMTPuser);
+		compose.setModal(true);
+		compose.setVisible(true);
 	}
 
 }
