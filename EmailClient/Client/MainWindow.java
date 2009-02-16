@@ -76,7 +76,7 @@ public class MainWindow extends javax.swing.JDialog {
 	private void refreshData(){
 //		rebuild the gui based on received data
 		getDataFromGateway();		
-		DefaultMutableTreeNode top = new DefaultMutableTreeNode("Inbox");
+		DefaultMutableTreeNode top = new DefaultMutableTreeNode(folders[0]);
 		GenerateTree(folders, top);		
 		FolderTree = new JTree(top);		
 		FolderTree.addTreeSelectionListener(new TreeSelectionListener() {
@@ -104,7 +104,7 @@ public class MainWindow extends javax.swing.JDialog {
 	
 	private void createNode(DefaultMutableTreeNode top, String[] path, int pos, Folder folder){
 		int i = 0;
-		if ( ((String)(top.getUserObject())).equalsIgnoreCase(path[path.length-2]) ){
+		if ( ((Folder)(top.getUserObject())).toString().equalsIgnoreCase(path[path.length-2]) ){
 			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(folder);
 			top.add(newNode);
 			return;
@@ -301,7 +301,7 @@ public class MainWindow extends javax.swing.JDialog {
 	private void FolderTreeValueChanged(TreeSelectionEvent evt) {
 		System.out.println("FolderTree.valueChanged, event="+evt);
 		Folder current = (Folder)((DefaultMutableTreeNode)evt.getNewLeadSelectionPath().getLastPathComponent()).getUserObject();		
-		String [] command = {"GET_EMAIL_LIST",current.toString()};
+		String [] command = {"GET_EMAIL_LIST",current.getFldName()};
 		
 		ObjectSender.SendObject(command, MessageTypes.CLIENT_COMMAND, getToGateway());
 		myContainer container2 = ObjectSender.WaitForObject(getToGateway());
