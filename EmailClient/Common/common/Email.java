@@ -11,6 +11,7 @@ public class Email implements Serializable{
 	String To 	= "";
 	String EmailNumber = "";
 	String FolderName = "";
+	private String SMTPHost, SMTPUser;
 	boolean Read = false;
 	boolean Answered = false; 
 	boolean Flagged = false; 
@@ -243,6 +244,22 @@ public class Email implements Serializable{
 
 	public boolean isRead() {
 		return Read;
+	}
+
+	public String getSMTPHost() {
+		return SMTPHost;
+	}
+
+	public void setSMTPHost(String host) {
+		SMTPHost = host;
+	}
+
+	public String getSMTPUser() {
+		return SMTPUser;
+	}
+
+	public void setSMTPUser(String user) {
+		SMTPUser = user;
 	}
 	
 	// End of Get functions 

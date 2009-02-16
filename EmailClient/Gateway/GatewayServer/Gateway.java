@@ -41,7 +41,7 @@ public class Gateway {
 		while (true) {
 
 			System.out.println("Waiting for commands...");
-			myContainer container = ObjectSender.WaitForObject(client);
+			myContainer container = ObjectSender.WaitForObjectNoTimeout(client);
 
 			if (container.getMsgType() == MessageTypes.LOGIN_INFO) {
 				System.out.println("LOGIN INFO received");
@@ -70,6 +70,18 @@ public class Gateway {
 					System.out.println("Login NOT successful.");
 					//
 				}
+			}else if (container.getMsgType() == MessageTypes.MESSAGE){
+				Email email = (Email) container.getPayload();
+				
+				SendSMTP.SendEmail(
+						email.getSMTPHost(), 
+						email.getFrom(), 
+						email.getTo(), 
+						email.getSubject(), 
+						email.getBody()
+						);
+				ObjectSender.SendObject(null, MessageTypes.CONFIRMATION_OK, client);
+				
 			} else if (container.getMsgType() == MessageTypes.CLIENT_COMMAND) {
 				System.out.println("Command received.");
 				String[] command = (String[]) container.getPayload();
@@ -136,11 +148,7 @@ public class Gateway {
 								//
 							}							
 						}
-
-					} else if (command[0].compareTo("SEND_EMAIL") == 0) {
-						
 					
-
 					} else if (command[0].compareTo("MOVE_EMAIL") == 0) {						
 						/*
 						if (command.length > 1){

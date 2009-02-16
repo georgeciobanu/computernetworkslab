@@ -31,13 +31,32 @@ public class ObjectSender {
 	}
 	
 	
+	public static myContainer WaitForObjectNoTimeout(Socket socket){
+		myContainer objResponse = null;		
+		try{			
+			ObjectInputStream response = new ObjectInputStream(socket.getInputStream());			
+			objResponse =  (myContainer) response.readObject();
+			
+			//Use an infinite timeout
+			
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return objResponse;
+	}
 	
 	public static myContainer WaitForObject(Socket socket){
-		myContainer objResponse = null;
-		
+		myContainer objResponse = null;		
 		try{
+			socket.setSoTimeout(10000); //We don't want to wait for more than 10 sec
+			
 			ObjectInputStream response = new ObjectInputStream(socket.getInputStream());			
-			objResponse =  (myContainer) response.readObject();					
+			objResponse =  (myContainer) response.readObject();
+			
+			//Use an infinite timeout
+			socket.setSoTimeout(0);
 			
 		} catch (Exception e)
 		{

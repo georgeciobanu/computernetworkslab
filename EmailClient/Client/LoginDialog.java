@@ -61,6 +61,7 @@ public class LoginDialog extends javax.swing.JDialog {
 
 	private JPanel IMAPPanel;
 	private JFrame parentFrame;
+	
 
 	/**
 	 * Auto-generated main method to display this JDialog
@@ -69,7 +70,7 @@ public class LoginDialog extends javax.swing.JDialog {
 	public LoginDialog(JFrame frame, Socket ToGateway) {
 		super(frame);
 		initGUI();
-		_toGateway = ToGateway;
+		_toGateway = ToGateway;		
 		parentFrame = frame;
 	}
 
@@ -173,14 +174,14 @@ public class LoginDialog extends javax.swing.JDialog {
 				{
 					SMTPHostField = new JTextField();
 					SMTPPanel.add(SMTPHostField);
-					SMTPHostField.setText("SMTPHostField");
+					SMTPHostField.setText("mailhost.mcgill.ca");
 					SMTPHostField.setBounds(66, 29, 177, 21);
 				}
 				{
 					SMTPUsernameField = new JTextField();
 					SMTPPanel.add(SMTPUsernameField);
-					SMTPUsernameField.setText("username");
-					SMTPUsernameField.setBounds(66, 55, 53, 21);
+					SMTPUsernameField.setText("ionut.ciobanu@mail.mcgill.ca");
+					SMTPUsernameField.setBounds(66, 55, 177, 21);
 				}
 			}
 			this.setSize(599, 257);
@@ -211,8 +212,13 @@ public class LoginDialog extends javax.swing.JDialog {
 								.getPayload();
 
 						if (ActualResponse.getReply() == LoginStatus.OK) {
-							MainWindow mainWindow = new MainWindow(null,
-									getSocket());
+							MainWindow mainWindow = 
+								new MainWindow(
+										null,
+									getSocket(), 
+									SMTPHostField.getText(), 
+									SMTPUsernameField.getText());
+							
 							mainWindow.setVisible(true);
 							this.setVisible(false);
 							break;

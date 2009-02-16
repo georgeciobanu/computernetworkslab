@@ -16,7 +16,7 @@ import java.text.*;     // Used for date formatting.
  */
 public class SendSMTP {
 
-    public void SendEmail(String HOST, String FROM, String TO, String SUBJECT, String DATA){
+    public static void SendEmail(String HOST, String FROM, String TO, String SUBJECT, String DATA){
         Socket smtpSocket = null;
          DataOutputStream os = null;
          DataInputStream is = null;

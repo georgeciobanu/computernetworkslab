@@ -19,7 +19,8 @@ public class Folder implements Serializable{
 	}
 	
 	public String toString(){
-		return this.FolderName;
+		String [] path = this.FolderName.split("[.]"); 
+		return path[path.length-1];
 	}
 	
 	public void setFldName( String name){
