@@ -118,20 +118,15 @@ public class Gateway {
 							}catch (Exception e){
 								//
 							}
-						}
-
-					} else if (command[0].compareTo("RENAME_FOLDER") == 0) {
-						
-
+						}											
 					} else if (command[0].compareTo("DELETE_FOLDER") == 0) {
 						
 						if (command.length > 1){
-							try{
-								
+							try{								
 								IMAPMethods.DeleteFolder(command[1]);
 								ObjectSender.SendObject(
-										IMAPMethods.getTHEemail(command[1]), 
-										MessageTypes.MESSAGE, 
+										null, 
+										MessageTypes.CONFIRMATION_OK, 
 										client);
 							}catch (Exception e){
 								//
@@ -150,11 +145,14 @@ public class Gateway {
 						}
 					
 					} else if (command[0].compareTo("MOVE_EMAIL") == 0) {						
-						/*
-						if (command.length > 1){
+						
+						if (command.length > 3){
 							try{
+								Email email = new Email();
+								email.setEmailNumber(command[1]);
+								email.setFolderName(command[2]);
 								
-								//IMAPMethods.moveEmail(command[1], command[2]);
+								IMAPMethods.moveEmail(email, command[3]);
 								ObjectSender.SendObject(
 										null, 
 										MessageTypes.CONFIRMATION_OK, 
@@ -162,7 +160,7 @@ public class Gateway {
 							}catch (Exception e){
 								//
 							}							
-						}*/
+						}
 
 					}
 
