@@ -8,6 +8,7 @@ public class Folder implements Serializable{
 	String RecentMsg = "undefined";
 	String TotalMsg = "undefined";
 	String UnseenMsg = "undefined";
+	String FolderSimplename;
 	
 	public Folder(String FlderName, String FldRecentMsg, String FldTotalMsg, String FldUnseenMsg){
 		
@@ -18,9 +19,8 @@ public class Folder implements Serializable{
 		
 	}
 	
-	public String toString(){
-		String [] path = this.FolderName.split("[.]"); 
-		return path[path.length-1];
+	public String toString(){		 
+		return getFolderSimplename()+ "("+TotalMsg+"/"+UnseenMsg+"/"+RecentMsg+")";
 	}
 	
 	public void setFldName( String name){
@@ -49,5 +49,12 @@ public class Folder implements Serializable{
 		return UnseenMsg;
 		
 	}
+
+	public String getFolderSimplename() {
+		String [] path = this.FolderName.split("[.]");
+		return path[path.length-1];
+	}
+
+	
 
 }

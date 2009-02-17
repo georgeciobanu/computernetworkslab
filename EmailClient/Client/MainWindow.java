@@ -124,7 +124,7 @@ public class MainWindow extends javax.swing.JDialog {
 		if (((Folder) (top.getUserObject())).toString().equalsIgnoreCase(
 				path[path.length - 2])) {
 			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(folder);
-			top.add(newNode);
+			top.add(newNode);			
 			return;
 		} else {
 			for (i = 0; i < top.getChildCount(); i++) {
@@ -144,7 +144,18 @@ public class MainWindow extends javax.swing.JDialog {
 		for (int i = 1; i < folders.length; i++) {
 			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(
 					folders[i]);
+			
 			String[] path = folders[i].getFldName().split("[.]");
+			//Need to add info to path elements
+			for (int j=0; j < path.length; j++){
+				for (int k = 0; k < folders.length; k++){
+					if (folders[k].getFolderSimplename().equals(path[j])){
+						path[j] = folders[k].toString();
+						break;
+					}
+				}
+				
+			}
 
 			createNode(top, path, 0, folders[i]);
 		}
