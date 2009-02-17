@@ -50,13 +50,13 @@ public class ObjectSender {
 	public static myContainer WaitForObject(Socket socket){
 		myContainer objResponse = null;		
 		try{
-			socket.setSoTimeout(10000); //We don't want to wait for more than 10 sec
+			
 			
 			ObjectInputStream response = new ObjectInputStream(socket.getInputStream());			
 			objResponse =  (myContainer) response.readObject();
 			
 			//Use an infinite timeout
-			socket.setSoTimeout(0);
+			
 			
 		} catch (Exception e)
 		{

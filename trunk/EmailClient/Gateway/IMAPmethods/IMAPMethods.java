@@ -129,7 +129,7 @@ public class IMAPMethods {
 
 
         // it makes sure that we have a correct name for the folder.
-        if (!DestinationFolder.equalsIgnoreCase("INBOX")) DestinationFolder = "INBOX."+DestinationFolder;
+        if (!DestinationFolder.equalsIgnoreCase("INBOX")) DestinationFolder = DestinationFolder;
 
         // command strings
         String COPYcmd = ". COPY "+emailNum+" "+DestinationFolder;
