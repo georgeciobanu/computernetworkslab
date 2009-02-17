@@ -355,7 +355,7 @@ public class MainWindow extends javax.swing.JDialog {
 			ObjectSender.SendObject(command, MessageTypes.CLIENT_COMMAND, getToGateway());
 			myContainer container = ObjectSender.WaitForObject(getToGateway());
 			
-			//if (container.getMsgType() == MessageTypes.CONFIRMATION_OK){			
+			if (container.getMsgType() == MessageTypes.CONFIRMATION_OK){			
 				getDataFromGateway();
 								
 				
@@ -363,8 +363,8 @@ public class MainWindow extends javax.swing.JDialog {
 				top.removeAllChildren();
 				GenerateTree(folders, top);
 				((DefaultTreeModel)FolderTree.getModel()).reload(top);
-			//}
-			//else JOptionPane.showMessageDialog(null, "Could not create folder");
+			}
+			else JOptionPane.showMessageDialog(null, "Could not create folder");
 		}
 	}
 
