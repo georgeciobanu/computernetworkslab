@@ -35,7 +35,7 @@ try
     //////////////////////////////////////////////////////////////////////////////////////////////
       
       try                        
-{   os.writeBytes("EHLO "+HOST+"\r\n");
+{   os.writeBytes("HELO "+HOST+"\r\n");
     // You will add the email address that the server 
     // you are using know you as.
     os.writeBytes("MAIL From: <"+FROM+">\r\n");
