@@ -200,7 +200,7 @@ public class LoginDialog extends javax.swing.JDialog {
 
 		
 			
-			myContainer objResponse = (myContainer) ObjectSender.WaitForObjectNoTimeout(getSocket());
+			myContainer objResponse = (myContainer) ObjectSender.WaitForObject(getSocket());
 
 			while (true) {			
 					if (objResponse.getMsgType() == MessageTypes.LOGIN_RESPONSE) {

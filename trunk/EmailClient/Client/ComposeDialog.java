@@ -124,7 +124,7 @@ public class ComposeDialog extends javax.swing.JDialog {
 		email.setSMTPUser(SMTPuser);
 		
 		ObjectSender.SendObject(email, MessageTypes.MESSAGE, client );
-		myContainer container = ObjectSender.WaitForObjectNoTimeout(client);
+		myContainer container = ObjectSender.WaitForObject(client);
 		
 		if (container.getMsgType() == MessageTypes.CONFIRMATION_OK){
 			JOptionPane.showMessageDialog(null, "Message sent");			
