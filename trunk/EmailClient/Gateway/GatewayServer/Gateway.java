@@ -114,7 +114,7 @@ public class Gateway {
 								IMAPMethods.CreateFolder(command[1]);
 								ObjectSender.SendObject(null, 
 										MessageTypes.CONFIRMATION_OK, 
-										client);
+										client);								
 							}catch (Exception e){
 								//
 							}

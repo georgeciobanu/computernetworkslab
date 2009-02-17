@@ -198,13 +198,11 @@ public class LoginDialog extends javax.swing.JDialog {
 
 		ObjectSender.SendObject(info, MessageTypes.LOGIN_INFO, getSocket());
 
-		try {
-			ObjectInputStream response = new ObjectInputStream(getSocket()
-					.getInputStream());
-			myContainer objResponse = (myContainer) response.readObject();
+		
+			
+			myContainer objResponse = (myContainer) ObjectSender.WaitForObjectNoTimeout(getSocket());
 
-			while (true) {
-				if (true) {
+			while (true) {			
 					if (objResponse.getMsgType() == MessageTypes.LOGIN_RESPONSE) {
 
 						myLoginResponse ActualResponse = new myLoginResponse();
@@ -228,8 +226,7 @@ public class LoginDialog extends javax.swing.JDialog {
 				}
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+		
+	
+	
 }

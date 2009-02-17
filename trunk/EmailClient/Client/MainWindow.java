@@ -11,6 +11,7 @@ import java.net.Socket;
 import javax.swing.JButton;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTree;
@@ -21,6 +22,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.text.Position.Bias;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import com.sun.corba.se.impl.protocol.giopmsgheaders.MessageBase;
@@ -59,6 +62,7 @@ public class MainWindow extends javax.swing.JDialog {
 	private Folder [] folders = null;
 	private Email [] emails = null; 
 	private String SMTPuser, SMTPhost;
+	
 
 	/**
 	* Auto-generated main method to display this JDialog
@@ -69,8 +73,8 @@ public class MainWindow extends javax.swing.JDialog {
 		toGateway = socket;						
 		SMTPuser = SMTPUser;
 		SMTPhost = SMTPHost;
-		refreshData();
-		initGUI();		
+		initGUI();
+		refreshData();				
 	}
 	
 	private void refreshData(){
@@ -78,14 +82,18 @@ public class MainWindow extends javax.swing.JDialog {
 		getDataFromGateway();		
 		DefaultMutableTreeNode top = new DefaultMutableTreeNode(folders[0]);
 		GenerateTree(folders, top);		
-		FolderTree = new JTree(top);		
+					
+		FolderTree = new JTree(top);	
+		jPanel1.add(FolderTree, BorderLayout.CENTER);
+		FolderTree.setPreferredSize(new java.awt.Dimension(186, 316));
+		
 		FolderTree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent evt) {
 				FolderTreeValueChanged(evt);
 			}
 		});
 		String [] columns = {"Number", "Subject", "From", "Date"};
-		EmailTable = new JTable(parseEmailList(emails, "Inbox"), columns );		
+		EmailTable.setModel(new DefaultTableModel( parseEmailList(emails, "Inbox"), columns ));		
 		EmailTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				EmailTableMouseClicked(evt);
@@ -123,16 +131,7 @@ public class MainWindow extends javax.swing.JDialog {
 			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(folders[i]);
 			String [] path = folders[i].getFldName().split("[.]");
 			
-			createNode(top, path, 0, folders[i]);
-			
-			/*for (int j = 0; j < result.length; j++){				
-				if (FolderTree.getNextMatch(result, 0, Bias.Forward) == null){
-					
-				}
-			}*/
-				
-			
-			//Recursively call to add all children
+			createNode(top, path, 0, folders[i]);						
 		}
 		return top;
 	}
@@ -163,7 +162,7 @@ public class MainWindow extends javax.swing.JDialog {
 		String [] command = {"GET_FOLDER_LIST"};
 		
 		ObjectSender.SendObject(command, MessageTypes.CLIENT_COMMAND, getToGateway());
-		myContainer container = ObjectSender.WaitForObject(getToGateway());
+		myContainer container = ObjectSender.WaitForObjectNoTimeout(getToGateway());
 		
 		if (container.getMsgType() == MessageTypes.FOLDER_LIST ){
 			folders = (Folder []) container.getPayload();			
@@ -176,7 +175,7 @@ public class MainWindow extends javax.swing.JDialog {
 		
 		if (container2.getMsgType() == MessageTypes.MESSAGE_LIST){
 			emails = (Email []) container2.getPayload();
-		}
+		}			
 		//else throw new IOException();			
 	}
 	
@@ -198,8 +197,8 @@ public class MainWindow extends javax.swing.JDialog {
 				jPanel1.setLayout(jPanel1Layout);
 				{
 					//FolderTree = new JTree();
-					jPanel1.add(FolderTree, BorderLayout.CENTER);
-					FolderTree.setPreferredSize(new java.awt.Dimension(186, 316));
+					//jPanel1.add(FolderTree, BorderLayout.CENTER);
+					//FolderTree.setPreferredSize(new java.awt.Dimension(186, 316));
 				}
 			}
 			{
@@ -213,9 +212,9 @@ public class MainWindow extends javax.swing.JDialog {
 						new DefaultTableModel(
 								new String[][] { { "One", "Two" }, { "Three", "Four" } },
 								new String[] { "Column 1", "Column 2" });				
-					//EmailTable = new JTable();					
+					EmailTable = new JTable();					
 					jPanel2.add(EmailTable, BorderLayout.CENTER);
-					//EmailTable.setModel(jTable1Model);
+					EmailTable.setModel(jTable1Model);
 					EmailTable.setPreferredSize(new java.awt.Dimension(418, 316));
 				}
 			}
@@ -240,6 +239,11 @@ public class MainWindow extends javax.swing.JDialog {
 					NewFolderButton = new JButton();
 					jPanel3.add(NewFolderButton);
 					NewFolderButton.setText("New Folder");
+					NewFolderButton.addMouseListener(new MouseAdapter() {
+						public void mouseClicked(MouseEvent evt) {
+							NewFolderButtonMouseClicked(evt);
+						}
+					});
 				}
 				{
 					RenameFolderButton = new JButton();
@@ -300,7 +304,10 @@ public class MainWindow extends javax.swing.JDialog {
 	
 	private void FolderTreeValueChanged(TreeSelectionEvent evt) {
 		System.out.println("FolderTree.valueChanged, event="+evt);
-		Folder current = (Folder)((DefaultMutableTreeNode)evt.getNewLeadSelectionPath().getLastPathComponent()).getUserObject();		
+		if ( (TreePath)evt.getNewLeadSelectionPath() == null)
+				return;
+		DefaultMutableTreeNode currentNode = ((DefaultMutableTreeNode)evt.getNewLeadSelectionPath().getLastPathComponent());		
+		Folder current = (Folder)currentNode.getUserObject();		
 		String [] command = {"GET_EMAIL_LIST",current.getFldName()};
 		
 		ObjectSender.SendObject(command, MessageTypes.CLIENT_COMMAND, getToGateway());
@@ -330,6 +337,35 @@ public class MainWindow extends javax.swing.JDialog {
 		ComposeDialog compose = new ComposeDialog(null, getToGateway(), SMTPhost, SMTPuser);
 		compose.setModal(true);
 		compose.setVisible(true);
+	}
+	
+	private void NewFolderButtonMouseClicked(MouseEvent evt) {
+		
+		System.out.println("NewFolderButton.mouseClicked, event="+evt);
+		if (FolderTree.getSelectionCount() != 1){
+			JOptionPane.showMessageDialog(null, "Please select only one parent folder");			
+		}
+		else {
+			String name = JOptionPane.showInputDialog("Please enter the folder name");
+			String path = ((Folder)((DefaultMutableTreeNode)FolderTree.getSelectionPath().getLastPathComponent()).getUserObject()).getFldName() + "."+name;
+			String [] command = new String [] {
+				"CREATE_FOLDER",
+				path
+			};			
+			ObjectSender.SendObject(command, MessageTypes.CLIENT_COMMAND, getToGateway());
+			myContainer container = ObjectSender.WaitForObject(getToGateway());
+			
+			//if (container.getMsgType() == MessageTypes.CONFIRMATION_OK){			
+				getDataFromGateway();
+								
+				
+				DefaultMutableTreeNode top = ((DefaultMutableTreeNode)FolderTree.getModel().getRoot());
+				top.removeAllChildren();
+				GenerateTree(folders, top);
+				((DefaultTreeModel)FolderTree.getModel()).reload(top);
+			//}
+			//else JOptionPane.showMessageDialog(null, "Could not create folder");
+		}
 	}
 
 }
