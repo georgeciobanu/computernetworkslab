@@ -124,7 +124,7 @@ public class MainWindow extends javax.swing.JDialog {
 		if (((Folder) (top.getUserObject())).toString().equalsIgnoreCase(
 				path[path.length - 2])) {
 			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(folder);
-			top.add(newNode);			
+			top.add(newNode);
 			return;
 		} else {
 			for (i = 0; i < top.getChildCount(); i++) {
@@ -144,17 +144,17 @@ public class MainWindow extends javax.swing.JDialog {
 		for (int i = 1; i < folders.length; i++) {
 			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(
 					folders[i]);
-			
+
 			String[] path = folders[i].getFldName().split("[.]");
-			//Need to add info to path elements
-			for (int j=0; j < path.length; j++){
-				for (int k = 0; k < folders.length; k++){
-					if (folders[k].getFolderSimplename().equals(path[j])){
+			// Need to add info to path elements
+			for (int j = 0; j < path.length; j++) {
+				for (int k = 0; k < folders.length; k++) {
+					if (folders[k].getFolderSimplename().equals(path[j])) {
 						path[j] = folders[k].toString();
 						break;
 					}
 				}
-				
+
 			}
 
 			createNode(top, path, 0, folders[i]);
@@ -167,17 +167,19 @@ public class MainWindow extends javax.swing.JDialog {
 			return new String[1][1];
 		String[][] emails = new String[emailList.length][4];
 		for (int i = 0; i < emailList.length; i++) {
-			emails[i][0] = emailList[i].getEmailNumber().toString();
-			emails[i][1] = emailList[i].getSubject();
+			if (emailList[i].isDeleted() == false) {
+				emails[i][0] = emailList[i].getEmailNumber().toString();
+				emails[i][1] = emailList[i].getSubject();
 
-			// TODO: Use the stuff Saleh added here
-			if (folder == "Sent") {
-				emails[i][2] = emailList[i].getTo();
-			} else {
-				emails[i][2] = emailList[i].getFrom().toString();
+				// TODO: Use the stuff Saleh added here
+				if (folder == "Sent") {
+					emails[i][2] = emailList[i].getTo();
+				} else {
+					emails[i][2] = emailList[i].getFrom().toString();
+				}
+
+				emails[i][3] = emailList[i].getDate().toString();
 			}
-
-			emails[i][3] = emailList[i].getDate().toString();
 		}
 		return emails;
 	}
@@ -439,22 +441,23 @@ public class MainWindow extends javax.swing.JDialog {
 		if (EmailTable.getSelectedRowCount() == 1) {
 			String selectedEmail = (String) EmailTable.getValueAt(EmailTable
 					.getSelectedRow(), 0);
-			
+			if (((TreePath) FolderTree.getSelectionPath() == null))
+					return;
 			String emailPath = ((Folder) ((DefaultMutableTreeNode) FolderTree
 					.getSelectionPath().getLastPathComponent()).getUserObject())
 					.getFldName();
-			
+
 			MoveEmailDialog moveEmail = new MoveEmailDialog(null,
-					(String) EmailTable.getValueAt(EmailTable.getSelectedRow(),0),
-					emailPath,
-					(DefaultMutableTreeNode) FolderTree.getModel()
-							.getRoot(), toGateway);
-			
-			//moveEmail.setModal(true);
+					(String) EmailTable.getValueAt(EmailTable.getSelectedRow(),
+							0), emailPath, (DefaultMutableTreeNode) FolderTree
+							.getModel().getRoot(), toGateway);
+
+			// moveEmail.setModal(true);
 			moveEmail.setVisible(true);
 
-		}
-		else JOptionPane.showMessageDialog(null, "Please select ONE message first");
+		} else
+			JOptionPane.showMessageDialog(null,
+					"Please select ONE message first");
 	}
 
 }
