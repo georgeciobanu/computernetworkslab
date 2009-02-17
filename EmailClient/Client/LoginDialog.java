@@ -109,42 +109,42 @@ public class LoginDialog extends javax.swing.JDialog {
 					jLabel4 = new JLabel();
 					IMAPPanel.add(jLabel4);
 					jLabel4.setText("Password");
-					jLabel4.setBounds(12, 107, 46, 14);
+					jLabel4.setBounds(12, 107, 83, 14);
 				}
 				{
 					jLabel3 = new JLabel();
 					IMAPPanel.add(jLabel3);
 					jLabel3.setText("Username");
-					jLabel3.setBounds(12, 76, 48, 14);
+					jLabel3.setBounds(12, 76, 83, 14);
 				}
 				{
 					jLabel2 = new JLabel();
 					IMAPPanel.add(jLabel2);
 					jLabel2.setText("Host");
-					jLabel2.setBounds(12, 45, 22, 14);
+					jLabel2.setBounds(12, 45, 28, 14);
 				}
 				{
 					jLabel1 = new JLabel();
 					IMAPPanel.add(jLabel1);
 					jLabel1.setText("IMAP");
-					jLabel1.setBounds(12, 12, 25, 14);
+					jLabel1.setBounds(12, 12, 66, 14);
 				}
 				{
 					IMAPHostField = new JTextField();
 					IMAPPanel.add(IMAPHostField);
 					IMAPHostField.setText("mail.messagingengine.com");
-					IMAPHostField.setBounds(46, 42, 248, 21);
+					IMAPHostField.setBounds(75, 42, 219, 21);
 				}
 				{
 					IMAPUsernameField = new JTextField();
 					IMAPPanel.add(IMAPUsernameField);
 					IMAPUsernameField.setText("ecse_489@myfastmail.com");
-					IMAPUsernameField.setBounds(72, 69, 222, 21);
+					IMAPUsernameField.setBounds(101, 73, 193, 21);
 				}
 				{
 					PasswordField = new JPasswordField();
 					IMAPPanel.add(PasswordField);
-					PasswordField.setBounds(70, 104, 120, 21);
+					PasswordField.setBounds(101, 104, 120, 21);
 					PasswordField.setText("ecse489");
 				}
 			}
@@ -157,7 +157,7 @@ public class LoginDialog extends javax.swing.JDialog {
 					jLabel5 = new JLabel();
 					SMTPPanel.add(jLabel5);
 					jLabel5.setText("SMTP");
-					jLabel5.setBounds(0, 12, 26, 14);
+					jLabel5.setBounds(0, 12, 48, 14);
 				}
 				{
 					jLabel6 = new JLabel();
@@ -169,22 +169,22 @@ public class LoginDialog extends javax.swing.JDialog {
 					jLabel7 = new JLabel();
 					SMTPPanel.add(jLabel7);
 					jLabel7.setText("Username");
-					jLabel7.setBounds(0, 58, 48, 14);
+					jLabel7.setBounds(0, 58, 82, 14);
 				}
 				{
 					SMTPHostField = new JTextField();
 					SMTPPanel.add(SMTPHostField);
 					SMTPHostField.setText("mailhost.mcgill.ca");
-					SMTPHostField.setBounds(66, 29, 177, 21);
+					SMTPHostField.setBounds(89, 29, 177, 21);
 				}
 				{
 					SMTPUsernameField = new JTextField();
 					SMTPPanel.add(SMTPUsernameField);
 					SMTPUsernameField.setText("ionut.ciobanu@mail.mcgill.ca");
-					SMTPUsernameField.setBounds(66, 55, 177, 21);
+					SMTPUsernameField.setBounds(89, 55, 177, 21);
 				}
 			}
-			this.setSize(599, 257);
+			this.setSize(632, 257);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
