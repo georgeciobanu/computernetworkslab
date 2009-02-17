@@ -371,7 +371,7 @@ public class IMAPMethods {
         boolean ReVal = true;
 
         String line = null;
-        String DELcmd = ". CREATE INBOX."+FolderName;
+        String DELcmd = ". CREATE "+FolderName;
 
         cmd(DELcmd);
         line = in.readLine();

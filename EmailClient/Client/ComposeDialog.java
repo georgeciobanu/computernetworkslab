@@ -126,9 +126,13 @@ public class ComposeDialog extends javax.swing.JDialog {
 		ObjectSender.SendObject(email, MessageTypes.MESSAGE, client );
 		myContainer container = ObjectSender.WaitForObjectNoTimeout(client);
 		
-		if (container.getMsgType() == MessageTypes.CONFIRMATION_OK)
-			JOptionPane.showMessageDialog(null, "Message sent");
-		else JOptionPane.showMessageDialog(null, "Message could NOT be sent");
+		if (container.getMsgType() == MessageTypes.CONFIRMATION_OK){
+			JOptionPane.showMessageDialog(null, "Message sent");			
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Message could NOT be sent");			
+		}
+		this.setVisible(false);
 	}
 
 }
