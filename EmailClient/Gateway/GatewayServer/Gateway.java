@@ -41,7 +41,7 @@ public class Gateway {
 		while (true) {
 
 			System.out.println("Waiting for commands...");
-			myContainer container = ObjectSender.WaitForObjectNoTimeout(client);
+			myContainer container = ObjectSender.WaitForObject(client);
 
 			if (container.getMsgType() == MessageTypes.LOGIN_INFO) {
 				System.out.println("LOGIN INFO received");

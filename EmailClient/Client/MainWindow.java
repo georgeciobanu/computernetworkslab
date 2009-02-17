@@ -191,7 +191,7 @@ public class MainWindow extends javax.swing.JDialog {
 		ObjectSender.SendObject(command, MessageTypes.CLIENT_COMMAND,
 				getToGateway());
 		myContainer container = ObjectSender
-				.WaitForObjectNoTimeout(getToGateway());
+				.WaitForObject(getToGateway());
 
 		if (container.getMsgType() == MessageTypes.FOLDER_LIST) {
 			folders = (Folder[]) container.getPayload();

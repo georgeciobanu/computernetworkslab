@@ -31,21 +31,7 @@ public class ObjectSender {
 	}
 	
 	
-	public static myContainer WaitForObjectNoTimeout(Socket socket){
-		myContainer objResponse = null;		
-		try{			
-			ObjectInputStream response = new ObjectInputStream(socket.getInputStream());			
-			objResponse =  (myContainer) response.readObject();
-			
-			//Use an infinite timeout
-			
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		return objResponse;
-	}
+
 	
 	public static myContainer WaitForObject(Socket socket){
 		myContainer objResponse = null;		
