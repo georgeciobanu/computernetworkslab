@@ -439,7 +439,7 @@ public class MainWindow extends javax.swing.JDialog {
 					(DefaultMutableTreeNode) FolderTree.getModel()
 							.getRoot(), toGateway);
 			
-			moveEmail.setModal(true);
+			//moveEmail.setModal(true);
 			moveEmail.setVisible(true);
 
 		}

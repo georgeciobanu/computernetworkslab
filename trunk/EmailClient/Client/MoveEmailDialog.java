@@ -75,7 +75,7 @@ public class MoveEmailDialog extends javax.swing.JDialog {
 
 		ObjectSender.SendObject(command, MessageTypes.CLIENT_COMMAND, toClient);
 		ObjectSender.WaitForObjectNoTimeout(toClient);
-		this.setModal(false);
+		
 		this.setVisible(false);
 				
 	}
