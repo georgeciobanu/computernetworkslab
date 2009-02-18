@@ -210,7 +210,7 @@ public class IMAPMethods {
         String folderName = Myemail.getFolderName();
         String line = null;
 
-        if (!folderName.equalsIgnoreCase("INBOX")) folderName = "INBOX."+folderName;
+       // if (!folderName.equalsIgnoreCase("INBOX")) folderName = "INBOX."+folderName;
 
         // SELECT command string 
         String SELECTcmd = ". SELECT "+folderName;
@@ -505,23 +505,37 @@ public class IMAPMethods {
 
         //TODO: check to see if the FolderName has to be with INBOX. it would be taken care of in NumberOfEmail's method????   
         // This gets the total number of email per folder.
-        int TotalNumEmails_perFld = Integer.parseInt(NumberOfEmail("MESSAGES",FolderName));
+        
+        String numberOFtotalEMails = NumberOfEmail("MESSAGES",FolderName);
+        if(numberOFtotalEMails.equals("")){
+       
+        	numberOFtotalEMails = "0";
+        }
+  //      try{
+        	
+        	int TotalNumEmails_perFld = Integer.parseInt(numberOFtotalEMails);
+ 
+        
         
         /*
          * EARLY RETURN 
          * 
          * It checks if there is any email in the folder, if there is none it simply returns NULL here.
          * */
-        if(TotalNumEmails_perFld == 0){
+        if(TotalNumEmails_perFld == 0 || numberOFtotalEMails.equals("")){
         	
         	return null;
         }
         	
         //----------> here we create an array of Email based on this number here.
         ListOfEmails = new Email[TotalNumEmails_perFld];
-
-
-
+/*
+        }
+        catch (NumberFormatException e) {
+            System.err.println("The numberOFtotalEMails"+numberOFtotalEMails+"is not acceptable");
+            System.exit(1);
+        } 	
+*/
         if (DEBUG) System.out.println("ListOfEmails Method");
 
         // To be able to get the required fields of each email we need to run the following
@@ -621,7 +635,7 @@ public class IMAPMethods {
                 if (DEBUG) System.out.println("Email is From: "+fromOFemails);
                 if (DEBUG) System.out.println("Email Subject is: "+subjectOFemails);
 
-
+                
                 ListOfEmails[email_index] = new Email(dateOFemails,
                                                       subjectOFemails,
                                                       "NAN",

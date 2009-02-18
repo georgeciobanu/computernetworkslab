@@ -68,7 +68,7 @@ public class Gateway {
 					ObjectSender.SendObject(response,
 							MessageTypes.LOGIN_RESPONSE, client);
 					System.out.println("Login NOT successful.");
-					//
+					e.printStackTrace();
 				}
 			}else if (container.getMsgType() == MessageTypes.MESSAGE){
 				Email email = (Email) container.getPayload();
@@ -93,7 +93,7 @@ public class Gateway {
 						 	ObjectSender.SendObject(folders, MessageTypes.FOLDER_LIST, client);
 						 	System.out.println("Sent list of folders to client.");
 						}catch(Exception e){
-							// ok, i know
+							e.printStackTrace();
 						}
 						
 					} else if (command[0].equals("GET_EMAIL_LIST")) {
@@ -104,7 +104,8 @@ public class Gateway {
 										MessageTypes.MESSAGE_LIST, 
 										client);
 							}catch (Exception e){
-								//
+								e.printStackTrace();
+								ObjectSender.SendObject(null, MessageTypes.MESSAGE_LIST, client);
 							}							
 						}					
 					} else if (command[0].compareTo("CREATE_FOLDER") == 0) {
@@ -116,7 +117,7 @@ public class Gateway {
 										MessageTypes.CONFIRMATION_OK, 
 										client);								
 							}catch (Exception e){
-								//
+								e.printStackTrace();
 							}
 						}											
 					} else if (command[0].compareTo("DELETE_FOLDER") == 0) {
@@ -129,7 +130,7 @@ public class Gateway {
 										MessageTypes.CONFIRMATION_OK, 
 										client);
 							}catch (Exception e){
-								//
+								e.printStackTrace();
 							}			
 						}
 					} else if (command[0].compareTo("GET_EMAIL") == 0) {
@@ -140,7 +141,7 @@ public class Gateway {
 										MessageTypes.MESSAGE, 
 										client);
 							}catch (Exception e){
-								//
+								e.printStackTrace();
 							}							
 						}
 					
@@ -153,12 +154,12 @@ public class Gateway {
 								email.setFolderName(command[2]);
 								
 								IMAPMethods.moveEmail(email, command[3]);
-								ObjectSender.SendObject(
+								/*ObjectSender.SendObject(
 										null, 
 										MessageTypes.CONFIRMATION_OK, 
-										client);
+										client);*/
 							}catch (Exception e){
-								//
+								e.printStackTrace();
 							}							
 						}
 
