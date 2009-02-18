@@ -137,7 +137,7 @@ public class IMAPMethods {
         String SELECTcmd = ". SELECT "+folderName;
 
         // something to pattern an string like this: ". OK [COPYUID 1234387231 1 2] Completed"
-        String OK_PATTERN = "^\\.\\s\\bOK\\b\\s\\[\\bCOPYUID\\b\\s[\\s\\:a-zA-Z0-9]*\\]\\s\\bCompleted\\b";
+        String OK_PATTERN = "^\\.\\s\\bOK\\b\\s\\[\\bCOPYUID\\b\\s[\\s\\:a-zA-Z0-9]*\\]\\s.*";
 
         // just for getting into the folder where the emial is stored in
         cmd(SELECTcmd);
@@ -149,7 +149,7 @@ public class IMAPMethods {
 
         Pattern p_NO = Pattern.compile("^\\.\\s\\bNO\\b\\s.*");
         Matcher m_NO = p_NO.matcher(line);
-
+        
         while (line != null && !m_NO.matches()) {
 
             Pattern p_end = Pattern.compile(OK_PATTERN);
@@ -243,8 +243,9 @@ public class IMAPMethods {
 
             Pattern p_end = Pattern.compile("^\\.\\s\\bOK\\b\\s\\bCompleted\\b");
             Matcher m_end = p_end.matcher(line);
-
-            if (m_end.matches()) {
+            boolean ok_ok = (line.contains(". OK") || line.contains("compeleted"));
+            
+            if (ok_ok) {
             	
             	// here we set the flag \Deleted on the Email Object.
             	Myemail.setDeleted(true);
@@ -328,7 +329,8 @@ public class IMAPMethods {
                     // Check for the ". OK Completed (0.000 sec)" to quit the loop.
                     Pattern p_end = Pattern.compile("^\\.\\s\\bOK\\b\\s\\bCompleted\\b\\s\\(\\d+\\.\\d+\\s\\bsec\\b\\)");
                     Matcher m_end = p_end.matcher(line);
-                    if (m_end.matches())break;
+                    boolean ok_ok = (line.contains(". OK") || line.contains("compeleted"));
+                    if (ok_ok)break;
                 }//if
             }//if
 
@@ -387,9 +389,10 @@ public class IMAPMethods {
         while (line != null && !m_NO.matches()) {
 
 
-            Pattern p_end = Pattern.compile("^\\.\\s\\bOK\\b\\s\\bCompleted\\b");
+            Pattern p_end = Pattern.compile("^\\.\\s\\bOK\\b\\s\\b"+FolderName+"\\b");
             Matcher m_end = p_end.matcher(line);
-            if (!m_end.matches()) line = in.readLine();if (LOGing) print(line);
+            boolean ok_ok = (line.contains(". OK") || line.contains("compeleted")); 
+            if (!ok_ok) line = in.readLine();if (LOGing) print(line);
 
 
             if (m_end.matches()) ReVal = false;break;
@@ -432,18 +435,22 @@ public class IMAPMethods {
         while (line != null && !m_NO.matches()) {
 
 
-            Pattern p_end = Pattern.compile("^\\.\\s\\bOK\\b\\s\\bCompleted\\b\\s\\(\\d+\\.\\d+\\s\\bsecs\\b\\s\\d*\\s\\bcalls\\b\\)");
+            //Pattern p_end = Pattern.compile("^\\.\\s\\bOK\\b\\s\\bCompleted\\b\\s\\(\\d+\\.\\d+\\s\\bsecs\\b\\s\\d*\\s\\bcalls\\b\\)");
+            Pattern p_end = Pattern.compile("^\\.\\s\\bOK\\b.*");
             Matcher m_end = p_end.matcher(line);
-
-            if (m_end.matches()) line = in.readLine();
+            boolean ok_ok = (line.contains(". OK") || line.contains("compeleted"));
+            
+            if (!ok_ok) line = in.readLine();
             if (LOGing) print(line);
 
-            if (m_end.matches()) {
+            if (ok_ok) {
                 ReVal = false; break;
             } else {
-                p_end = Pattern.compile("^\\.\\s\\bOK\\b\\s\\bCompleted\\b");
+               // p_end = Pattern.compile("^\\.\\s\\bOK\\b\\s\\bCompleted\\b");
+            	p_end = Pattern.compile("^\\.\\s\\bOK\\b.*");
                 m_end = p_end.matcher(line);
-                if (m_end.matches()) ReVal = false;break;
+                boolean ok_ok_end = (line.contains(". OK") || line.contains("compeleted"));
+                if (ok_ok_end) ReVal = false;break;
             }//else
 
         }//while
@@ -665,7 +672,8 @@ public class IMAPMethods {
             //	if( line.substring(0,4).equalsIgnoreCase(". OK") && !line.substring(0,27).equalsIgnoreCase(". OK [READ-WRITE] Completed")) break;
             //}
             //if(line.substring(0,5).equalsIgnoreCase(". BAD"))  ReV = "-1";break;
-            Pattern p_end = Pattern.compile("^\\.\\s\\bOK\\b\\s\\bCompleted\\b\\s\\(\\d+\\.\\d+\\s\\bsec\\b\\)");
+           // >> Pattern p_end = Pattern.compile("^\\.\\s\\bOK\\b\\s\\bCompleted\\b\\s\\(\\d+\\.\\d+\\s\\bsec\\b\\)");
+            Pattern p_end = Pattern.compile("^\\.\\s\\bOK\\b\\s\\bFETCH\\b.*");
             Matcher m_end = p_end.matcher(line);
             if (m_end.matches())break;
 
@@ -805,7 +813,8 @@ public class IMAPMethods {
     	Folder[] Re_fld;
     	String[] cmdS = new String[]{". status INBOX (recent)",". status INBOX (messages)",". status INBOX (messages)"};
     	// this string is to match with such a string ". OK Completed (0.000 secs 9 calls)"
-    	String OK = "^\\.\\s\\bOK\\b\\s\\bCompleted\\b\\s\\(\\d+\\.\\d+\\s\\bsecs\\b\\s\\d*\\s\\bcalls\\b\\)";
+    	//String OK = "^\\.\\s\\bOK\\b\\s\\bCompleted\\b\\s\\(\\d+\\.\\d+\\s\\bsecs\\b\\s\\d*\\s\\bcalls\\b\\)";
+    	String OK = "^\\.\\s\\bOK\\b\\s\\bLIST\\b.*";
     	
     	if(DEBUG)System.out.println(" This is ListofFolders()");
         cmd(". list \"\" \"*\"");
