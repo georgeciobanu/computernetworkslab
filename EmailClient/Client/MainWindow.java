@@ -167,18 +167,20 @@ public class MainWindow extends javax.swing.JDialog {
 			return new String[1][1];
 		String[][] emails = new String[emailList.length][4];
 		for (int i = 0; i < emailList.length; i++) {
-			if (emailList[i].isDeleted() == false) {
-				emails[i][0] = emailList[i].getEmailNumber().toString();
-				emails[i][1] = emailList[i].getSubject();
+			if (emailList[i] != null) {
+				if (emailList[i].isDeleted() == false) {
+					emails[i][0] = emailList[i].getEmailNumber().toString();
+					emails[i][1] = emailList[i].getSubject();
 
-				// TODO: Use the stuff Saleh added here
-				if (folder == "Sent") {
-					emails[i][2] = emailList[i].getTo();
-				} else {
-					emails[i][2] = emailList[i].getFrom().toString();
+					// TODO: Use the stuff Saleh added here
+					if (folder == "Sent") {
+						emails[i][2] = emailList[i].getTo();
+					} else {
+						emails[i][2] = emailList[i].getFrom().toString();
+					}
+
+					emails[i][3] = emailList[i].getDate().toString();
 				}
-
-				emails[i][3] = emailList[i].getDate().toString();
 			}
 		}
 		return emails;
@@ -190,8 +192,7 @@ public class MainWindow extends javax.swing.JDialog {
 
 		ObjectSender.SendObject(command, MessageTypes.CLIENT_COMMAND,
 				getToGateway());
-		myContainer container = ObjectSender
-				.WaitForObject(getToGateway());
+		myContainer container = ObjectSender.WaitForObject(getToGateway());
 
 		if (container.getMsgType() == MessageTypes.FOLDER_LIST) {
 			folders = (Folder[]) container.getPayload();
@@ -442,7 +443,7 @@ public class MainWindow extends javax.swing.JDialog {
 			String selectedEmail = (String) EmailTable.getValueAt(EmailTable
 					.getSelectedRow(), 0);
 			if (((TreePath) FolderTree.getSelectionPath() == null))
-					return;
+				return;
 			String emailPath = ((Folder) ((DefaultMutableTreeNode) FolderTree
 					.getSelectionPath().getLastPathComponent()).getUserObject())
 					.getFldName();
