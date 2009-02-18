@@ -75,10 +75,11 @@ public class Gateway {
 				
 				SendSMTP.SendEmail(
 						email.getSMTPHost(), 
-						email.getFrom(), 
+						email.getSMTPUser(), 
 						email.getTo(), 
 						email.getSubject(), 
-						email.getBody()
+						email.getBody(),
+						email.getSMTPPort()
 						);
 				ObjectSender.SendObject(null, MessageTypes.CONFIRMATION_OK, client);
 				

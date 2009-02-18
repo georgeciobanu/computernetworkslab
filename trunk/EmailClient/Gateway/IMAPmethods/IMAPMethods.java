@@ -703,20 +703,25 @@ public class IMAPMethods {
         String delims = "[( "+statusType+"]";
         String[] status_rv;
         String cmd = ". STATUS \""+folderName+"\" ("+statusType+")";
-
+        boolean GOTSTATUS = false; 
+        
+        
         if (DEBUG)System.out.println(" This is NumberOfEmail");
 
         cmd(cmd);
         line = in.readLine();
-        if (LOGing) print("1"+line);
+        if (LOGing) print(line);
         while (line != null) {
 
+        	
+        	
             if ( line.substring(0,8).equalsIgnoreCase("* STATUS")) {
                 status_rv  = line.split(delims);
+                GOTSTATUS = true;
                 ReV = status_rv[status_rv.length-1].replace(")", "");
             }
 
-            if ( line.substring(0,4).equalsIgnoreCase(". OK")) break;
+            if ( GOTSTATUS && line.substring(0,4).equalsIgnoreCase(". OK")) break;
             //if(line.substring(0,5).equalsIgnoreCase(". BAD"))  ReV = "-1";break;
             
             	line = in.readLine(); 

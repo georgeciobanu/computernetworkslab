@@ -36,6 +36,8 @@ public class LoginDialog extends javax.swing.JDialog {
 	private JLabel jLabel4;
 
 	private JLabel jLabel5;
+	private JTextField portField;
+	private JLabel jLabel8;
 
 	private JTextField SMTPUsernameField;
 
@@ -174,7 +176,7 @@ public class LoginDialog extends javax.swing.JDialog {
 				{
 					SMTPHostField = new JTextField();
 					SMTPPanel.add(SMTPHostField);
-					SMTPHostField.setText("mailhost.mcgill.ca");
+					SMTPHostField.setText("mail.ifimadeuptherules.com");
 					SMTPHostField.setBounds(89, 29, 177, 21);
 				}
 				{
@@ -182,6 +184,18 @@ public class LoginDialog extends javax.swing.JDialog {
 					SMTPPanel.add(SMTPUsernameField);
 					SMTPUsernameField.setText("ionut.ciobanu@mail.mcgill.ca");
 					SMTPUsernameField.setBounds(89, 55, 177, 21);
+				}
+				{
+					jLabel8 = new JLabel();
+					SMTPPanel.add(jLabel8);
+					jLabel8.setText("Port:");
+					jLabel8.setBounds(0, 91, 65, 14);
+				}
+				{
+					portField = new JTextField();
+					SMTPPanel.add(portField);
+					portField.setText("587");
+					portField.setBounds(89, 88, 81, 21);
 				}
 			}
 			this.setSize(632, 257);
@@ -215,7 +229,9 @@ public class LoginDialog extends javax.swing.JDialog {
 										null,
 									getSocket(), 
 									SMTPHostField.getText(), 
-									SMTPUsernameField.getText());
+									SMTPUsernameField.getText(),
+									portField.getText()
+									);
 							
 							mainWindow.setVisible(true);
 							this.setVisible(false);
