@@ -46,14 +46,15 @@ public class ComposeDialog extends javax.swing.JDialog {
 	private JTextField toField;
 	private JLabel toLabel;
 	private Socket client;
-	private String SMTPhost, SMTPuser;
-
+	private String SMTPhost, SMTPuser, SMTPport;
 	
-	public ComposeDialog(JFrame frame, Socket socket, String SMTPHost, String SMTPUser) {
+	
+	public ComposeDialog(JFrame frame, Socket socket, String SMTPHost, String SMTPUser, String SMTPPort) {
 		super(frame);
 		initGUI();
 		SMTPuser = SMTPUser;
 		SMTPhost = SMTPHost;
+		SMTPport = SMTPPort;
 		client = socket;
 	}
 	
@@ -122,6 +123,7 @@ public class ComposeDialog extends javax.swing.JDialog {
 		email.setSubject(subjectField.getText());
 		email.setSMTPHost(SMTPhost);
 		email.setSMTPUser(SMTPuser);
+		email.setSMTPPort(SMTPport);
 		
 		ObjectSender.SendObject(email, MessageTypes.MESSAGE, client );
 		myContainer container = ObjectSender.WaitForObject(client);

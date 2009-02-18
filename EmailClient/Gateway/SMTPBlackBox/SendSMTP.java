@@ -16,17 +16,18 @@ import java.text.*;     // Used for date formatting.
  */
 public class SendSMTP {
 
-    public static void SendEmail(String HOST, String FROM, String TO, String SUBJECT, String DATA){
+    public static void SendEmail(String HOST, String FROM, String TO, String SUBJECT, String DATA, String SMTPPort){
         Socket smtpSocket = null;
          DataOutputStream os = null;
          DataInputStream is = null;
-
+         
         Date dDate = new Date();
         DateFormat dFormat = DateFormat.getDateInstance(DateFormat.FULL,Locale.US);
 
 try
 { // Open port to server
-  smtpSocket = new Socket(HOST, 25);
+	int port = Integer.parseInt(SMTPPort);	
+  smtpSocket = new Socket(HOST, port);
   os = new DataOutputStream(smtpSocket.getOutputStream());
   is = new DataInputStream(smtpSocket.getInputStream());
             
@@ -55,9 +56,9 @@ try
     
     os.writeBytes("DATE: " + dFormat.format(dDate) + "\r\n");
    
-    os.writeBytes("From: Imad <"+FROM+">\r\n");
+    os.writeBytes("From: <"+FROM+">\r\n");
    
-    os.writeBytes("To:  YOU <"+TO+">\r\n");
+    os.writeBytes("To:   <"+TO+">\r\n");
     
                
     //Again if you want to send a CC then add this.

@@ -69,17 +69,19 @@ public class MainWindow extends javax.swing.JDialog {
 	private Email[] emails = null;
 
 	private String SMTPuser, SMTPhost;
+	private String SMTPport;
 
 	/**
 	 * Auto-generated main method to display this JDialog
 	 */
 
 	public MainWindow(JFrame frame, Socket socket, String SMTPHost,
-			String SMTPUser) {
+			String SMTPUser, String SMTPPort) {
 		super();
 		toGateway = socket;
 		SMTPuser = SMTPUser;
 		SMTPhost = SMTPHost;
+		SMTPport = SMTPPort;
 		initGUI();
 		refreshData();
 	}
@@ -375,7 +377,7 @@ public class MainWindow extends javax.swing.JDialog {
 	private void ComposeButtonMouseClicked(MouseEvent evt) {
 		System.out.println("ComposeButton.mouseClicked, event=" + evt);
 		ComposeDialog compose = new ComposeDialog(null, getToGateway(),
-				SMTPhost, SMTPuser);
+				SMTPhost, SMTPuser, SMTPport);
 		compose.setModal(true);
 		compose.setVisible(true);
 	}
