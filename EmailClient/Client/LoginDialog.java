@@ -134,20 +134,20 @@ public class LoginDialog extends javax.swing.JDialog {
 				{
 					IMAPHostField = new JTextField();
 					IMAPPanel.add(IMAPHostField);
-					IMAPHostField.setText("mail.messagingengine.com");
+					IMAPHostField.setText("mail.ifimadeuptherules.com");
 					IMAPHostField.setBounds(75, 42, 219, 21);
 				}
 				{
 					IMAPUsernameField = new JTextField();
 					IMAPPanel.add(IMAPUsernameField);
-					IMAPUsernameField.setText("ecse_489@myfastmail.com");
+					IMAPUsernameField.setText("ecse489@ifimadeuptherules.com");
 					IMAPUsernameField.setBounds(101, 73, 193, 21);
 				}
 				{
 					PasswordField = new JPasswordField();
 					IMAPPanel.add(PasswordField);
 					PasswordField.setBounds(101, 104, 120, 21);
-					PasswordField.setText("ecse489");
+					PasswordField.setText("winter2009");
 				}
 			}
 			{

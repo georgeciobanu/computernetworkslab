@@ -199,6 +199,15 @@ public class MainWindow extends javax.swing.JDialog {
 		if (container.getMsgType() == MessageTypes.FOLDER_LIST) {
 			folders = (Folder[]) container.getPayload();
 		}
+		
+		int length = folders.length-1;
+		Folder [] tmpFolders = new Folder[folders.length];
+		for (int i = 0; i < folders.length; i++){
+			tmpFolders[i] = folders[length-i];
+		}
+		folders = tmpFolders;
+		
+			
 
 		command = new String[] { "GET_EMAIL_LIST", "INBOX" };
 
