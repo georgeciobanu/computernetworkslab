@@ -129,8 +129,9 @@ public class IMAPMethods {
 
 
         // it makes sure that we have a correct name for the folder.
-        if (!DestinationFolder.equalsIgnoreCase("INBOX")) DestinationFolder = DestinationFolder;
-
+        //if (!DestinationFolder.equalsIgnoreCase("INBOX")) DestinationFolder = DestinationFolder;
+        // no need for this line, since the complete folder name will be passed i.e INBOX.FolderName
+        
         // command strings
         String COPYcmd = ". COPY "+emailNum+" "+DestinationFolder;
         String SELECTcmd = ". SELECT "+folderName;
@@ -244,7 +245,10 @@ public class IMAPMethods {
             Matcher m_end = p_end.matcher(line);
 
             if (m_end.matches()) {
-
+            	
+            	// here we set the flag \Deleted on the Email Object.
+            	Myemail.setDeleted(true);
+            	
                 ReVal = false;  // means success 
                 break;
             }//if

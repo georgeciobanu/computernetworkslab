@@ -182,7 +182,7 @@ public class Email implements Serializable{
 		return FolderName;
 	}
 	
-	public boolean setRead(){
+	public boolean getRead(){
 		
 		return Read;
 	}
@@ -203,7 +203,7 @@ public class Email implements Serializable{
 		
 		return Draft;
 	}
-	public boolean setDeleted(){
+	public boolean getDeleted(){
 		
 		return Deleted;
 	}
