@@ -182,7 +182,7 @@ public class LoginDialog extends javax.swing.JDialog {
 				{
 					SMTPUsernameField = new JTextField();
 					SMTPPanel.add(SMTPUsernameField);
-					SMTPUsernameField.setText("ionut.ciobanu@mail.mcgill.ca");
+					SMTPUsernameField.setText("ecse489@ifimadeuptherules.com");
 					SMTPUsernameField.setBounds(89, 55, 177, 21);
 				}
 				{
