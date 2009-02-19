@@ -7,7 +7,8 @@ package SMTPBlackBox;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.text.*;     // Used for date formatting.
+import java.text.*;    // Used for date formatting.
+import common.*;
 
 
 /**
@@ -16,7 +17,7 @@ import java.text.*;     // Used for date formatting.
  */
 public class SendSMTP {
 
-    public static void SendEmail(String HOST, String FROM, String TO, String SUBJECT, String DATA, String SMTPPort){
+    public static void SendEmail(String HOST, String FROM, String pass, String TO, String SUBJECT, String DATA, String SMTPPort){
         Socket smtpSocket = null;
          DataOutputStream os = null;
          DataInputStream is = null;
@@ -40,7 +41,17 @@ try
     // You will add the email address that the server 
     // you are using know you as.
     os.writeBytes("MAIL From: <"+FROM+">\r\n");
-           
+    
+    os.writeBytes("AUTH LOGIN");
+    
+    for(int i=0; i<1000000; i++) {}
+    
+    
+    os.writeBytes(Base64Coder.encodeString(FROM));
+    
+    for(int i=0; i<1000000; i++) {}
+    os.writeBytes(Base64Coder.encodeString(pass));
+    for(int i=0; i<1000000; i++) {}      
     // Who the email is going to.
     os.writeBytes("RCPT To: <"+TO+">\r\n");
   

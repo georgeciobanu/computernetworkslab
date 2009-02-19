@@ -10,6 +10,13 @@ import java.awt.BorderLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JEditorPane;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
+
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+
 /**
 * This code was edited or generated using CloudGarden's Jigloo
 * SWT/Swing GUI Builder, which is free for non-commercial
@@ -37,9 +44,11 @@ public class ViewMessageDialog extends javax.swing.JDialog {
 	private JLabel toLabel;
 	private JPanel InfoLine;
 	private Email email;
+	private JFrame Frame;
 
 	public ViewMessageDialog(JFrame frame, String subject, Email mail) {		
 		super(frame);
+		
 		emailSubject = subject;
 		email = mail;
 		initGUI();
@@ -47,52 +56,43 @@ public class ViewMessageDialog extends javax.swing.JDialog {
 	
 	private void initGUI() {
 		try {
-			getContentPane().setLayout(null);
-			{
-				InfoLine = new JPanel();
-				getContentPane().add(InfoLine);
-				InfoLine.setBounds(0, 0, 392, 29);
-				{
-					fromLabel = new JLabel();
-					InfoLine.add(fromLabel);
-					fromLabel.setText("From:");
-				}
-				{
-					toLabel = new JLabel();
-					InfoLine.add(toLabel);
-					toLabel.setText("To:");
-				}
-				{
-					dateLabel = new JLabel();
-					InfoLine.add(dateLabel);
-					dateLabel.setText("Date:");
-				}
-			}
-			{
-				BodyPanel = new JPanel();
-				getContentPane().add(BodyPanel);
-				BodyPanel.setMinimumSize(new java.awt.Dimension(16, 100));
-				BodyPanel.setBounds(0, 29, 392, 236);
-				{
-					jScrollPane1 = new JScrollPane();
-					BodyPanel.add(jScrollPane1);
-					jScrollPane1.setPreferredSize(new java.awt.Dimension(389, 232));
-					jScrollPane1.getHorizontalScrollBar().setPreferredSize(new java.awt.Dimension(386, 15));
-					{
-						jEditorPane1 = new JEditorPane();
-						jScrollPane1.setViewportView(jEditorPane1);
-						jEditorPane1.setText("jEditorPane1");
-						jEditorPane1.setPreferredSize(new java.awt.Dimension(389, 176));
-					}
-				}
-			}
-			setSize(400, 300);
+
 			
-			setTitle(getEmailSubject());
-			jEditorPane1.setText(email.getBody());
-			fromLabel.setText(email.getFrom());
-			toLabel.setText(email.getTo());
-			dateLabel.setText(email.getDate());
+			//setTitle();
+			
+		    JFrame Frame = new JFrame(getEmailSubject());
+		    //f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			
+		    Container content = Frame.getContentPane();
+		    String body = email.getBody();
+		    String to   = email.getTo();
+		    String from = email.getFrom();
+		    String date = email.getDate();
+		    String html = "<table border=\"0\">"+
+						    "<tr>"+
+						    "<td>From:\t</td>"+
+						    "<td>"+from+"</td>"+
+						    "</tr>"+
+						    "<tr>"+
+						    "<td>To:\t</td>"+
+						    "<td>"+to+"</td>"+
+						    "</tr>"+
+						    "<tr>"+
+						    "<td>Date:\t</td>"+
+						    "<td>"+date+"</td>"+
+						    "</tr>"+
+						    "<tr>"+
+						    body+
+						    "</tr>"+
+						    "</table>";
+						    
+		    
+		    JEditorPane editor = new JEditorPane("text/html",html);
+		    editor.setEditable(false);
+		    JScrollPane scrollPane = new JScrollPane(editor);
+		    content.add(scrollPane, BorderLayout.CENTER);
+		    Frame.setSize(300, 200);
+		    Frame.setVisible(true);
 			
 			
 		} catch (Exception e) {

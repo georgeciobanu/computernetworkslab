@@ -42,18 +42,19 @@ public class Gateway {
 
 			System.out.println("Waiting for commands...");
 			myContainer container = ObjectSender.WaitForObject(client);
-
+			String passwordimad = "";
 			if (container.getMsgType() == MessageTypes.LOGIN_INFO) {
 				System.out.println("LOGIN INFO received");
 				// TODO: if (!loggedIn)
 				myLoginInfo loginInfo = (myLoginInfo) container.getPayload();
 				myLoginResponse response = null;
+				
 				try {
 					System.out.println("Loging in to IMAP Server...");
 					IMAPMethods.OpenConnection(loginInfo.getIMAPHost());
 					IMAPMethods.Login(loginInfo.getIMAPUsername(), loginInfo
 							.getIMAPPassword());
-
+					passwordimad = loginInfo.getIMAPPassword();
 					// if we got here then everything is OK
 
 					System.out.println("Logged in, sending confirmation to client");
@@ -73,9 +74,11 @@ public class Gateway {
 			}else if (container.getMsgType() == MessageTypes.MESSAGE){
 				Email email = (Email) container.getPayload();
 				
+				
 				SendSMTP.SendEmail(
 						email.getSMTPHost(), 
-						email.getSMTPUser(), 
+						email.getSMTPUser(),
+						passwordimad,
 						email.getTo(), 
 						email.getSubject(), 
 						email.getBody(),
