@@ -181,7 +181,14 @@ public class MainWindow extends javax.swing.JDialog {
 						emails[i][2] = emailList[i].getFrom().toString();
 					}
 
-					emails[i][3] = emailList[i].getDate().toString();
+					try{
+					if (emailList[i] != null && emails[i] != null)
+						emails[i][3] = emailList[i].getDate().toString();
+					}catch(Exception e)
+					{
+						e.printStackTrace();
+					}
+					
 				}
 			}
 		}
