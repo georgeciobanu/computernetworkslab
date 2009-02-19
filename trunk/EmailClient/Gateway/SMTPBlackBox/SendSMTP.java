@@ -40,36 +40,39 @@ try
 {   os.writeBytes("HELO "+HOST+"\r\n");
     // You will add the email address that the server 
     // you are using know you as.
-    os.writeBytes("MAIL From: <"+FROM+">\r\n");
     
-    os.writeBytes("AUTH LOGIN");
+    
+    os.writeBytes("AUTH LOGIN\n");
+    
+    //for(int i=0; i<1000000; i++) {}
+    
+    
+    os.writeBytes(Base64Coder.encodeString("ecse489@ifimadeuptherules.com")+"\n");
     
     for(int i=0; i<1000000; i++) {}
+    os.writeBytes(Base64Coder.encodeString("winter2009")+"\n");
+    //for(int i=0; i<1000000; i++) {} 
     
-    
-    os.writeBytes(Base64Coder.encodeString(FROM));
-    
-    for(int i=0; i<1000000; i++) {}
-    os.writeBytes(Base64Coder.encodeString(pass));
-    for(int i=0; i<1000000; i++) {}      
+    os.writeBytes("MAIL From: <"+FROM+">\n");
     // Who the email is going to.
-    os.writeBytes("RCPT To: <"+TO+">\r\n");
-  
+    System.out.println(is.readLine());
+    os.writeBytes("RCPT To: <"+TO+">\n");
+    System.out.println(is.readLine());
     //IF you want to send a CC then you will have to add this
     //os.writeBytes("RCPT To: <mohamad.aleagha@gmail.com>\r\n");
 
               
     // Now we are ready to add the message and the 
     // header of the email to be sent out.                
-    os.writeBytes("DATA\r\n");
-                 
+    os.writeBytes("DATA\n");
+    System.out.println(is.readLine());              
     //os.writeBytes("X-Mailer: Via Java\r\n");
     
-    os.writeBytes("DATE: " + dFormat.format(dDate) + "\r\n");
+    os.writeBytes("DATE: " + dFormat.format(dDate) + "\n");
    
-    os.writeBytes("From: <"+FROM+">\r\n");
+    os.writeBytes("From: "+FROM+"\n");
    
-    os.writeBytes("To:   <"+TO+">\r\n");
+    os.writeBytes("To:   "+TO+"\n");
     
                
     //Again if you want to send a CC then add this.
@@ -82,12 +85,12 @@ try
     
     
 
-    os.writeBytes("Subject: "+SUBJECT+"\r\n");
+    os.writeBytes("Subject: "+SUBJECT+"\n");
    
-    os.writeBytes(DATA + "\r\n");
+    os.writeBytes(DATA + "\n");
    
-    os.writeBytes("\r\n.\r\n");
-    os.writeBytes("QUIT\r\n");
+    os.writeBytes("\n.\n");
+    //os.writeBytes("QUIT\n");
                 
     // Now send the email off and check the server reply.  
     // Was an OK is reached you are complete.
