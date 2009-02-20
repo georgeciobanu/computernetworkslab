@@ -211,9 +211,7 @@ public class LoginDialog extends javax.swing.JDialog {
 				SMTPHostField.getText(), SMTPUsernameField.getText());
 
 		ObjectSender.SendObject(info, MessageTypes.LOGIN_INFO, getSocket());
-
-		
-			
+					
 			myContainer objResponse = (myContainer) ObjectSender.WaitForObject(getSocket());
 
 			while (true) {			

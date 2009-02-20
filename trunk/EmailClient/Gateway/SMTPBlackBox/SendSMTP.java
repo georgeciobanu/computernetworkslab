@@ -68,7 +68,7 @@ try
     System.out.println(is.readLine());              
     //os.writeBytes("X-Mailer: Via Java\r\n");
     
-    os.writeBytes("DATE: " + dFormat.format(dDate) + "\n");
+    os.writeBytes("\"DATE: " + dFormat.format(dDate) + "\"\n");
    
     os.writeBytes("From: "+FROM+"\n");
    
