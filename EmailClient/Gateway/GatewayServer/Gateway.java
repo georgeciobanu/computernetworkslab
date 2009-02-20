@@ -31,7 +31,7 @@ public class Gateway {
 								String.valueOf(SERVER_PORT) + 
 								" Waiting for connections...");
 			client = server.accept();
-			System.out.println("Client connected!");
+			System.out.println("Client connected! (port assigned: "+String.valueOf(client.getLocalPort()));
 			
 
 		} catch (Exception e) {

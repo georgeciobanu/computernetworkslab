@@ -22,6 +22,7 @@ public class ObjectSender {
 		container.setMsgType(type);
 		
 		try{
+			System.out.println("Sending serialized object over the socket: " + container.getMsgType().toString());
 			ObjectOutputStream ObjectStream = new ObjectOutputStream(socket.getOutputStream());
 			ObjectStream.writeObject(container);
 		} catch (Exception e)
@@ -37,10 +38,9 @@ public class ObjectSender {
 		myContainer objResponse = null;		
 		try{
 			
-			
 			ObjectInputStream response = new ObjectInputStream(socket.getInputStream());			
 			objResponse =  (myContainer) response.readObject();
-			
+			System.out.println("Received serialized object over the socket: " + objResponse.getMsgType().toString());
 			//Use an infinite timeout
 			
 			
